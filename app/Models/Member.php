@@ -81,6 +81,17 @@ class Member extends Authenticatable
         'other' => 'Other'
     ];
 
+    public const USER_BLOOD_GROUP = [
+        'o_positive' => 'O (+ve)',
+        'o_negative' => 'O (-ve)',
+        'a_positive' => 'A (+ve)',
+        'a_negative' => 'A (-ve)',
+        'b_positive' => 'B (+ve)',
+        'b_negative' => 'B (-ve)',
+        'ab_positive' => 'AB (+ve)',
+        'ab_negative' => 'AB (-ve)',
+    ];
+
     protected $appends = ['avatar_url','signature_image','nid_front_image','nid_back_image'];
 
     public const APPLICENT_IMAGE = 'member/user';

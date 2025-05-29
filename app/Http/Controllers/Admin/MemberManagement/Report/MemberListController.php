@@ -75,7 +75,8 @@ class MemberListController extends Controller
         set_page_meta('Member Edit');
         $member = $this->memberService->get($id,['nominee','associatorsInfo','memberChoices']);
         $user_gender = collect(User::USER_GENDER);
-        return view('pages.admin.member-management.report.member-edit',compact('user_gender','member'));
+        $user_blood_group = collect(User::USER_BLOOD_GROUP);
+        return view('pages.admin.member-management.report.member-edit', compact('user_gender', 'user_blood_group', 'member'));
         // dd($member);
     }
 

@@ -24,7 +24,8 @@ class MemberController extends Controller
     public function registration(){
         set_page_meta('Member Registration');
         $user_gender = collect(User::USER_GENDER);
-        return view('pages.admin.member-management.member-registration',compact('user_gender'));
+        $user_blood_group = collect(User::USER_BLOOD_GROUP);
+        return view('pages.admin.member-management.member-registration', compact('user_gender', 'user_blood_group'));
     }
 
 

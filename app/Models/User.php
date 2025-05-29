@@ -61,6 +61,19 @@ class User extends Authenticatable
     ];
 
 
+    public const USER_BLOOD_GROUP = [
+        'o_positive' => 'O (+ve)',
+        'o_negative' => 'O (-ve)',
+        'a_positive' => 'A (+ve)',
+        'a_negative' => 'A (-ve)',
+        'b_positive' => 'B (+ve)',
+        'b_negative' => 'B (-ve)',
+        'ab_positive' => 'AB (+ve)',
+        'ab_negative' => 'AB (-ve)',
+    ];
+
+
+
     public const USER_STATUS = [
         self::USER_ACTIVE => self::USER_ACTIVE,
         self::USER_INACTIVE => self::USER_INACTIVE,

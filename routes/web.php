@@ -29,8 +29,10 @@ use App\Http\Controllers\Admin\AccountManagement\account\LedgerController;
 
 Route::get('/', function () {
     $user_gender = collect(User::USER_GENDER);
+    $user_blood_group = collect(User::USER_BLOOD_GROUP);
     return view('pages.member.member_login_register', [
         'user_gender' => $user_gender,
+        'user_blood_group' => $user_blood_group
     ]);
 });
 

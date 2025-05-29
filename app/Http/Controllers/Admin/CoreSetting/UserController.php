@@ -45,10 +45,11 @@ class UserController extends Controller
     {
         set_page_meta('User Create');
         $user_gender = collect(User::USER_GENDER);
+        $user_blood_group = collect(User::USER_BLOOD_GROUP);
         $user_status = collect(User::USER_STATUS);
         $roles = $this->roleService->getAllRoles();
         // dd($roles);
-        return view('pages.admin.core-setting.user.create',compact('user_gender','user_status','roles'));
+        return view('pages.admin.core-setting.user.create', compact('user_gender', 'user_blood_group', 'user_status', 'roles'));
     }
 
     /**
@@ -96,11 +97,12 @@ class UserController extends Controller
     {
         set_page_meta('User Create');
         $user_gender = collect(User::USER_GENDER);
+        $user_blood_group = collect(User::USER_BLOOD_GROUP);
         $user_status = collect(User::USER_STATUS);
         $roles = $this->roleService->getAllRoles();
         $user = $this->userService->get($id);
         // dd($user);
-        return view('pages.admin.core-setting.user.edit',compact('user_gender','user_status','roles','user'));
+        return view('pages.admin.core-setting.user.edit', compact('user_gender', 'user_blood_group', 'user_status', 'roles', 'user'));
     }
 
     /**

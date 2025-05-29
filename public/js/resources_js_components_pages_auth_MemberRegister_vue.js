@@ -44,7 +44,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "MemberRegister",
-  props: ["userGender"],
+  props: ["userGender", "userBloodGroup"],
   data: function data() {
     return {
       form: {
@@ -55,7 +55,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           spouse_name: "",
           image: "",
           bcs_batch: "",
-          joining_date: "",
+          // joining_date: "",
           cader_id: "",
           birth_date: "",
           gender: "",
@@ -63,7 +63,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
           email: "",
           password: "",
           nid: "",
-          office_address: "",
+          // office_address: "",
           present_address: "",
           permanent_address: "",
           emergency_contact: "",
@@ -331,20 +331,25 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         image: {
           required: false
         },
-        bcs_batch: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_5__.required
-        },
-        joining_date: {
-          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_5__.required
-        },
-        cader_id: {
-          required: false,
-          numeric: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_5__.numeric
-        },
+        // bcs_batch: {
+        //     required,
+        // },
+
+        // joining_date: {
+        //     required,
+        // },
+
+        // cader_id: {
+        //     required: false,
+        //     numeric,
+        // },
         birth_date: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_5__.required
         },
         gender: {
+          required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_5__.required
+        },
+        blood_group: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_5__.required
         },
         mobile: {
@@ -361,7 +366,20 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
         nid: {
           required: vuelidate_lib_validators__WEBPACK_IMPORTED_MODULE_5__.required
         },
-        office_address: {
+        // office_address: {
+        //     required: false,
+        // },
+
+        current_occupation: {
+          required: true
+        },
+        current_designation: {
+          required: true
+        },
+        current_occupation_joining: {
+          required: true
+        },
+        current_office_address: {
           required: false
         },
         present_address: {
@@ -478,6 +496,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     }
   },
   created: function created() {
+    console.log("All props:", this.$props);
     this.initialApproveCheck();
     this.fetchData();
   },
@@ -800,7 +819,11 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
               return _context2.abrupt("return", false);
             case 30:
               _this6.user_supervis_auth_error = false;
-              if (!(_this6.$v.form.applicant_info.name.$invalid || _this6.$v.form.applicant_info.father_name.$invalid || _this6.$v.form.applicant_info.mother_name.$invalid || _this6.$v.form.applicant_info.bcs_batch.$invalid || _this6.$v.form.applicant_info.joining_date.$invalid || _this6.$v.form.applicant_info.cader_id.$invalid || _this6.$v.form.applicant_info.birth_date.$invalid || _this6.$v.form.applicant_info.gender.$invalid || _this6.$v.form.applicant_info.mobile.$invalid || _this6.$v.form.applicant_info.email.$invalid || _this6.$v.form.applicant_info.password.$invalid || _this6.$v.form.applicant_info.ref_memeber_id_no.$invalid || _this6.$v.form.applicant_info.ref_mobile.$invalid || _this6.$v.form.applicant_info.ref_name.$invalid)) {
+              if (!(_this6.$v.form.applicant_info.name.$invalid || _this6.$v.form.applicant_info.father_name.$invalid || _this6.$v.form.applicant_info.mother_name.$invalid ||
+              // this.$v.form.applicant_info.bcs_batch.$invalid ||
+              _this6.$v.form.applicant_info.joining_date.$invalid ||
+              // this.$v.form.applicant_info.cader_id.$invalid ||
+              _this6.$v.form.applicant_info.birth_date.$invalid || _this6.$v.form.applicant_info.gender.$invalid || _this6.$v.form.applicant_info.mobile.$invalid || _this6.$v.form.applicant_info.email.$invalid || _this6.$v.form.applicant_info.password.$invalid || _this6.$v.form.applicant_info.ref_memeber_id_no.$invalid || _this6.$v.form.applicant_info.ref_mobile.$invalid || _this6.$v.form.applicant_info.ref_name.$invalid)) {
                 _context2.next = 34;
                 break;
               }
@@ -1171,147 +1194,6 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "form-label",
     attrs: {
-      "for": "bcs_batch"
-    }
-  }, [_vm._v("BCS Batch & Cadre "), _c("span", [_vm._v("*")])]), _c("svg", {
-    attrs: {
-      width: "16",
-      height: "16"
-    }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model.trim",
-      value: _vm.$v.form.applicant_info.bcs_batch.$model,
-      expression: "\n                                    $v.form.applicant_info.bcs_batch.$model\n                                ",
-      modifiers: {
-        trim: true
-      }
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "text",
-      id: "bcs_batch",
-      name: "bcs_batch"
-    },
-    domProps: {
-      value: _vm.$v.form.applicant_info.bcs_batch.$model
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.$v.form.applicant_info.bcs_batch, "$model", $event.target.value.trim());
-      },
-      blur: function blur($event) {
-        return _vm.$forceUpdate();
-      }
-    }
-  }), _vm._v(" "), !_vm.$v.form.applicant_info.bcs_batch.required && _vm.additional_info_error ? _c("div", {
-    staticClass: "error",
-    staticStyle: {
-      color: "red"
-    }
-  }, [_vm._v("\n                                Field is required\n                            ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("div", {
-    staticClass: "mb-3"
-  }, [_c("label", {
-    staticClass: "form-label",
-    attrs: {
-      "for": "joining_date"
-    }
-  }, [_vm._v("Joining Date "), _c("span", [_vm._v("*")])]), _c("svg", {
-    attrs: {
-      width: "16",
-      height: "16"
-    }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model.trim",
-      value: _vm.$v.form.applicant_info.joining_date.$model,
-      expression: "\n                                    $v.form.applicant_info.joining_date\n                                        .$model\n                                ",
-      modifiers: {
-        trim: true
-      }
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "date",
-      id: "joining_date",
-      name: "joining_date"
-    },
-    domProps: {
-      value: _vm.$v.form.applicant_info.joining_date.$model
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.$v.form.applicant_info.joining_date, "$model", $event.target.value.trim());
-      },
-      blur: function blur($event) {
-        return _vm.$forceUpdate();
-      }
-    }
-  }), _vm._v(" "), !_vm.$v.form.applicant_info.joining_date.required && _vm.additional_info_error ? _c("div", {
-    staticClass: "error",
-    staticStyle: {
-      color: "red"
-    }
-  }, [_vm._v("\n                                Field is required\n                            ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("div", {
-    staticClass: "mb-3"
-  }, [_c("label", {
-    staticClass: "form-label",
-    attrs: {
-      "for": "cader_id"
-    }
-  }, [_vm._v("Cadre ID ")]), _c("svg", {
-    attrs: {
-      width: "16",
-      height: "16"
-    }
-  }), _vm._v(" "), _c("input", {
-    directives: [{
-      name: "model",
-      rawName: "v-model.trim",
-      value: _vm.$v.form.applicant_info.cader_id.$model,
-      expression: "\n                                    $v.form.applicant_info.cader_id.$model\n                                ",
-      modifiers: {
-        trim: true
-      }
-    }],
-    staticClass: "form-control",
-    attrs: {
-      type: "number",
-      id: "cader_id",
-      name: "cader_id"
-    },
-    domProps: {
-      value: _vm.$v.form.applicant_info.cader_id.$model
-    },
-    on: {
-      input: function input($event) {
-        if ($event.target.composing) return;
-        _vm.$set(_vm.$v.form.applicant_info.cader_id, "$model", $event.target.value.trim());
-      },
-      blur: function blur($event) {
-        return _vm.$forceUpdate();
-      }
-    }
-  }), _vm._v(" "), !_vm.$v.form.applicant_info.cader_id.numeric && _vm.additional_info_error ? _c("div", {
-    staticClass: "error",
-    staticStyle: {
-      color: "red"
-    }
-  }, [_vm._v("\n                                Field is numeric\n                            ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
-    staticClass: "col-md-6"
-  }, [_c("div", {
-    staticClass: "mb-3"
-  }, [_c("label", {
-    staticClass: "form-label",
-    attrs: {
       "for": "birth_date"
     }
   }, [_vm._v("Date of Birth "), _c("span", [_vm._v("*")])]), _c("svg", {
@@ -1403,6 +1285,62 @@ var render = function render() {
         value: key
       }
     }, [_vm._v("\n                                    " + _vm._s(gender) + "\n                                ")]);
+  })], 2), _vm._v(" "), !_vm.$v.form.applicant_info.gender.required && _vm.additional_info_error ? _c("div", {
+    staticClass: "error",
+    staticStyle: {
+      color: "red"
+    }
+  }, [_vm._v("\n                                Field is required\n                            ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "mb-3"
+  }, [_c("label", {
+    staticClass: "form-label",
+    attrs: {
+      "for": "blood_group"
+    }
+  }, [_vm._v("Blood Group "), _c("span", [_vm._v("*")])]), _c("svg", {
+    attrs: {
+      width: "16",
+      height: "16"
+    }
+  }), _vm._v(" "), _c("select", {
+    directives: [{
+      name: "model",
+      rawName: "v-model.trim",
+      value: _vm.$v.form.applicant_info.blood_group.$model,
+      expression: "\n                                    $v.form.applicant_info.blood_group.$model\n                                ",
+      modifiers: {
+        trim: true
+      }
+    }],
+    staticClass: "form-select",
+    attrs: {
+      name: "blood_group"
+    },
+    on: {
+      change: function change($event) {
+        var $$selectedVal = Array.prototype.filter.call($event.target.options, function (o) {
+          return o.selected;
+        }).map(function (o) {
+          var val = "_value" in o ? o._value : o.value;
+          return val;
+        });
+        _vm.$set(_vm.$v.form.applicant_info.blood_group, "$model", $event.target.multiple ? $$selectedVal : $$selectedVal[0]);
+      }
+    }
+  }, [_c("option", {
+    attrs: {
+      selected: "selected",
+      disabled: ""
+    }
+  }, [_vm._v("\n                                    Choose One\n                                ")]), _vm._v(" "), _vm._l(_vm.userBloodGroup, function (group, key) {
+    return _c("option", {
+      key: key,
+      domProps: {
+        value: key
+      }
+    }, [_vm._v("\n                                    " + _vm._s(group) + "\n                                ")]);
   })], 2), _vm._v(" "), !_vm.$v.form.applicant_info.gender.required && _vm.additional_info_error ? _c("div", {
     staticClass: "error",
     staticStyle: {
@@ -1599,9 +1537,150 @@ var render = function render() {
   }, [_c("label", {
     staticClass: "form-label",
     attrs: {
-      "for": "office_address"
+      "for": "current_occupation"
     }
-  }, [_vm._v("Designation & Office Address ")]), _c("svg", {
+  }, [_vm._v("Current Occupation "), _c("span", [_vm._v("*")])]), _c("svg", {
+    attrs: {
+      width: "16",
+      height: "16"
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model.trim",
+      value: _vm.$v.form.applicant_info.current_occupation.$model,
+      expression: "\n                                    $v.form.applicant_info.current_occupation.$model\n                                ",
+      modifiers: {
+        trim: true
+      }
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      id: "current_occupation",
+      name: "current_occupation"
+    },
+    domProps: {
+      value: _vm.$v.form.applicant_info.current_occupation.$model
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.$v.form.applicant_info.current_occupation, "$model", $event.target.value.trim());
+      },
+      blur: function blur($event) {
+        return _vm.$forceUpdate();
+      }
+    }
+  }), _vm._v(" "), !_vm.$v.form.applicant_info.current_occupation.required && _vm.additional_info_error ? _c("div", {
+    staticClass: "error",
+    staticStyle: {
+      color: "red"
+    }
+  }, [_vm._v("\n                                Field is required\n                            ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "mb-3"
+  }, [_c("label", {
+    staticClass: "form-label",
+    attrs: {
+      "for": "current_designation"
+    }
+  }, [_vm._v("Current Designation "), _c("span", [_vm._v("*")])]), _c("svg", {
+    attrs: {
+      width: "16",
+      height: "16"
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model.trim",
+      value: _vm.$v.form.applicant_info.current_designation.$model,
+      expression: "\n                                    $v.form.applicant_info.current_designation.$model\n                                ",
+      modifiers: {
+        trim: true
+      }
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "text",
+      id: "current_designation",
+      name: "current_designation"
+    },
+    domProps: {
+      value: _vm.$v.form.applicant_info.current_designation.$model
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.$v.form.applicant_info.current_designation, "$model", $event.target.value.trim());
+      },
+      blur: function blur($event) {
+        return _vm.$forceUpdate();
+      }
+    }
+  }), _vm._v(" "), !_vm.$v.form.applicant_info.current_designation.required && _vm.additional_info_error ? _c("div", {
+    staticClass: "error",
+    staticStyle: {
+      color: "red"
+    }
+  }, [_vm._v("\n                                Field is required\n                            ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "mb-3"
+  }, [_c("label", {
+    staticClass: "form-label",
+    attrs: {
+      "for": "current_occupation_joining"
+    }
+  }, [_vm._v("Joining Date "), _c("span", [_vm._v("*")])]), _c("svg", {
+    attrs: {
+      width: "16",
+      height: "16"
+    }
+  }), _vm._v(" "), _c("input", {
+    directives: [{
+      name: "model",
+      rawName: "v-model.trim",
+      value: _vm.$v.form.applicant_info.current_occupation_joining.$model,
+      expression: "\n                                    $v.form.applicant_info.current_occupation_joining.$model\n                                ",
+      modifiers: {
+        trim: true
+      }
+    }],
+    staticClass: "form-control",
+    attrs: {
+      type: "date",
+      id: "current_occupation_joining",
+      name: "current_occupation_joining"
+    },
+    domProps: {
+      value: _vm.$v.form.applicant_info.current_occupation_joining.$model
+    },
+    on: {
+      input: function input($event) {
+        if ($event.target.composing) return;
+        _vm.$set(_vm.$v.form.applicant_info.current_occupation_joining, "$model", $event.target.value.trim());
+      },
+      blur: function blur($event) {
+        return _vm.$forceUpdate();
+      }
+    }
+  }), _vm._v(" "), !_vm.$v.form.applicant_info.current_occupation_joining.required && _vm.additional_info_error ? _c("div", {
+    staticClass: "error",
+    staticStyle: {
+      color: "red"
+    }
+  }, [_vm._v("\n                                Field is required\n                            ")]) : _vm._e()])]), _vm._v(" "), _c("div", {
+    staticClass: "col-md-6"
+  }, [_c("div", {
+    staticClass: "mb-3"
+  }, [_c("label", {
+    staticClass: "form-label",
+    attrs: {
+      "for": "current_office_address"
+    }
+  }, [_vm._v("Current Office Address ")]), _c("svg", {
     attrs: {
       width: "16",
       height: "16"
@@ -1610,25 +1689,25 @@ var render = function render() {
     directives: [{
       name: "model",
       rawName: "v-model.trim",
-      value: _vm.$v.form.applicant_info.office_address.$model,
-      expression: "\n                                    $v.form.applicant_info.office_address\n                                        .$model\n                                ",
+      value: _vm.$v.form.applicant_info.current_office_address.$model,
+      expression: "\n                                    $v.form.applicant_info.current_office_address\n                                        .$model\n                                ",
       modifiers: {
         trim: true
       }
     }],
     staticClass: "form-control",
     attrs: {
-      id: "office_address",
-      name: "office_address",
+      id: "current_office_address",
+      name: "current_office_address",
       rows: "3"
     },
     domProps: {
-      value: _vm.$v.form.applicant_info.office_address.$model
+      value: _vm.$v.form.applicant_info.current_office_address.$model
     },
     on: {
       input: function input($event) {
         if ($event.target.composing) return;
-        _vm.$set(_vm.$v.form.applicant_info.office_address, "$model", $event.target.value.trim());
+        _vm.$set(_vm.$v.form.applicant_info.current_office_address, "$model", $event.target.value.trim());
       },
       blur: function blur($event) {
         return _vm.$forceUpdate();
@@ -3480,7 +3559,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.error[data-v-09dc2884] {\r\n    color: red !important;\n}\n.signature_img[data-v-09dc2884] {\r\n    width: 100%;\r\n    height: 101px;\r\n    border-radius: 5px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.error[data-v-09dc2884] {\n    color: red !important;\n}\n.signature_img[data-v-09dc2884] {\n    width: 100%;\n    height: 101px;\n    border-radius: 5px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

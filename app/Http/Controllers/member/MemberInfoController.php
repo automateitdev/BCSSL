@@ -24,8 +24,9 @@ class MemberInfoController extends Controller
         }, 'associatorsInfo:member_id,membershp_number', 'nominee', 'memberProfileUpdate:id,member_id,status', 'paymentInfos', 'memberChoices'])->find($user->id);
         $assetAccReceiveBy = AccountGroup::with(['Ledgers'])->find([1, 2, 3]);
         $user_gender = collect(User::USER_GENDER);
+        $user_blood_group = collect(User::USER_BLOOD_GROUP);
 
-        return view('pages.member.dashboard.member-info', compact('member', 'assetAccReceiveBy', 'user_gender'));
+        return view('pages.member.dashboard.member-info', compact('member', 'assetAccReceiveBy', 'user_gender', 'user_blood_group'));
     }
 
     public function paymentInvoice($id)

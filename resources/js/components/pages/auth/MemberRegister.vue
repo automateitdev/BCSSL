@@ -203,7 +203,7 @@
                             </div>
                         </div>
 
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="bcs_batch" class="form-label"
                                     >BCS Batch & Cadre <span>*</span></label
@@ -228,9 +228,9 @@
                                     Field is required
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
 
-                        <div class="col-md-6">
+                        <!-- <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="joining_date" class="form-label"
                                     >Joining Date <span>*</span></label
@@ -257,8 +257,8 @@
                                     Field is required
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
+                        </div> -->
+                        <!-- <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="cader_id" class="form-label"
                                     >Cadre ID </label
@@ -273,28 +273,14 @@
                                         $v.form.applicant_info.cader_id.$model
                                     "
                                 />
-                                <!-- <div
-                                    class="error"
-                                    style="color: red"
-                                    v-if="
-                                        !$v.form.applicant_info.cader_id
-                                            .required && additional_info_error
-                                    "
-                                >
-                                    Field is required
-                                </div> -->
                                 <div
                                     class="error"
                                     style="color: red"
-                                    v-if="
-                                        !$v.form.applicant_info.cader_id
-                                            .numeric && additional_info_error
-                                    "
-                                >
+                                    v-if="!$v.form.applicant_info.cader_id.numeric && additional_info_error">
                                     Field is numeric
                                 </div>
                             </div>
-                        </div>
+                        </div> -->
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="birth_date" class="form-label"
@@ -322,6 +308,8 @@
                                 </div>
                             </div>
                         </div>
+
+
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="gender" class="form-label"
@@ -358,6 +346,45 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="blood_group" class="form-label"
+                                    >Blood Group <span>*</span></label
+                                ><svg width="16" height="16"></svg>
+
+                                <select
+                                    class="form-select"
+                                    name="blood_group"
+                                    v-model.trim="
+                                        $v.form.applicant_info.blood_group.$model
+                                    "
+                                >
+                                    <option selected="selected" disabled>
+                                        Choose One
+                                    </option>
+                                    <option
+                                        v-for="(group, key) in userBloodGroup"
+                                        :key="key"
+                                        :value="key"
+                                    >
+                                        {{ group }}
+                                    </option>
+                                </select>
+                                <div
+                                    class="error"
+                                    style="color: red"
+                                    v-if="
+                                        !$v.form.applicant_info.gender
+                                            .required && additional_info_error
+                                    "
+                                >
+                                    Field is required
+                                </div>
+                            </div>
+                        </div>
+
+
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="mobile" class="form-label"
@@ -500,19 +527,107 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="office_address" class="form-label"
-                                    >Designation & Office Address </label
+                                <label for="current_occupation" class="form-label"
+                                    >Current Occupation <span>*</span></label
+                                ><svg width="16" height="16"></svg>
+
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    id="current_occupation"
+                                    name="current_occupation"
+                                    v-model.trim="
+                                        $v.form.applicant_info.current_occupation.$model
+                                    "
+                                />
+                                <div
+                                    class="error"
+                                    style="color: red"
+                                    v-if="
+                                        !$v.form.applicant_info.current_occupation.required &&
+                                        additional_info_error
+                                    "
+                                >
+                                    Field is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="current_designation" class="form-label"
+                                    >Current Designation <span>*</span></label
+                                ><svg width="16" height="16"></svg>
+
+                                <input
+                                    class="form-control"
+                                    type="text"
+                                    id="current_designation"
+                                    name="current_designation"
+                                    v-model.trim="
+                                        $v.form.applicant_info.current_designation.$model
+                                    "
+                                />
+                                <div
+                                    class="error"
+                                    style="color: red"
+                                    v-if="
+                                        !$v.form.applicant_info.current_designation.required &&
+                                        additional_info_error
+                                    "
+                                >
+                                    Field is required
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="current_occupation_joining" class="form-label"
+                                    >Joining Date <span>*</span></label
+                                ><svg width="16" height="16"></svg>
+
+                                <input
+                                    class="form-control"
+                                    type="date"
+                                    id="current_occupation_joining"
+                                    name="current_occupation_joining"
+                                    v-model.trim="
+                                        $v.form.applicant_info.current_occupation_joining.$model
+                                    "
+                                />
+                                <div
+                                    class="error"
+                                    style="color: red"
+                                    v-if="
+                                        !$v.form.applicant_info.current_occupation_joining
+                                            .required && additional_info_error
+                                    "
+                                >
+                                    Field is required
+                                </div>
+                            </div>
+                        </div>
+
+
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="current_office_address" class="form-label"
+                                    >Current Office Address </label
                                 ><svg width="16" height="16"></svg>
 
                                 <textarea
                                     class="form-control"
-                                    id="office_address"
-                                    name="office_address"
+                                    id="current_office_address"
+                                    name="current_office_address"
                                     rows="3"
                                     v-model.trim="
-                                        $v.form.applicant_info.office_address
+                                        $v.form.applicant_info.current_office_address
                                             .$model
                                     "
                                 ></textarea>
@@ -2082,7 +2197,7 @@ import VueElementLoading from "vue-element-loading";
 
 export default {
     name: "MemberRegister",
-    props: ["userGender"],
+    props: ["userGender", "userBloodGroup"],
     data() {
         return {
             form: {
@@ -2093,7 +2208,7 @@ export default {
                     spouse_name: "",
                     image: "",
                     bcs_batch: "",
-                    joining_date: "",
+                    // joining_date: "",
                     cader_id: "",
                     birth_date: "",
                     gender: "",
@@ -2101,7 +2216,7 @@ export default {
                     email: "",
                     password: "",
                     nid: "",
-                    office_address: "",
+                    // office_address: "",
                     present_address: "",
                     permanent_address: "",
                     emergency_contact: "",
@@ -2407,24 +2522,29 @@ export default {
                 image: {
                     required: false,
                 },
-                bcs_batch: {
-                    required,
-                },
+                // bcs_batch: {
+                //     required,
+                // },
 
-                joining_date: {
-                    required,
-                },
+                // joining_date: {
+                //     required,
+                // },
 
-                cader_id: {
-                    required: false,
-                    numeric,
-                },
+                // cader_id: {
+                //     required: false,
+                //     numeric,
+                // },
                 birth_date: {
                     required,
                 },
                 gender: {
                     required,
                 },
+
+                blood_group: {
+                   required,
+                },
+
                 mobile: {
                     required,
                 },
@@ -2439,9 +2559,27 @@ export default {
                 nid: {
                     required,
                 },
-                office_address: {
+
+                // office_address: {
+                //     required: false,
+                // },
+
+                current_occupation: {
+                    required: true,
+                },
+
+                current_designation: {
+                    required: true,
+                },
+
+                current_occupation_joining: {
+                   required:true,
+                },
+
+                current_office_address: {
                     required: false,
                 },
+
                 present_address: {
                     required: false,
                 },
@@ -2556,6 +2694,7 @@ export default {
         },
     },
     created() {
+        console.log("All props:", this.$props);
         this.initialApproveCheck();
         this.fetchData();
     },
@@ -2887,9 +3026,9 @@ export default {
                 this.$v.form.applicant_info.name.$invalid ||
                 this.$v.form.applicant_info.father_name.$invalid ||
                 this.$v.form.applicant_info.mother_name.$invalid ||
-                this.$v.form.applicant_info.bcs_batch.$invalid ||
+                // this.$v.form.applicant_info.bcs_batch.$invalid ||
                 this.$v.form.applicant_info.joining_date.$invalid ||
-                this.$v.form.applicant_info.cader_id.$invalid ||
+                // this.$v.form.applicant_info.cader_id.$invalid ||
                 this.$v.form.applicant_info.birth_date.$invalid ||
                 this.$v.form.applicant_info.gender.$invalid ||
                 this.$v.form.applicant_info.mobile.$invalid ||

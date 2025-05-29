@@ -142,7 +142,7 @@
                         <div class="tab-pane fade {{ 'show ' . $class_name_two }}" id="pills-reg" role="tabpanel"
                             aria-labelledby="pills-reg-tab">
                             {{-- {{$user_gender}} --}}
-                            <member-register :user-gender="{{$user_gender}}" />
+                            <member-register :user-gender="{{$user_gender}}" :user-blood-group="{{ $user_blood_group }}"/>
 
                         </div>
                     </div>

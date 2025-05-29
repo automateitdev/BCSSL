@@ -29,8 +29,10 @@ class MemberAuthController extends Controller
     }
     public function index(){
         $user_gender = collect(User::USER_GENDER);
+        $user_blood_group = collect(User::USER_BLOOD_GROUP);
         return view('pages.member.member_login_register', [
             'user_gender' => $user_gender,
+            'user_blood_group' => $user_blood_group
         ]);
     }
 
@@ -119,7 +121,6 @@ class MemberAuthController extends Controller
             DB::beginTransaction();
             if (isset($applicant_info_data['image']) && $applicant_info_data['image'] != null) {
                 $applicant_info_data['image'] =  $this->fileUploadService->uploadBase64File($applicant_info_data['image'], Member::APPLICENT_IMAGE);
-                
             }
             if (isset($applicant_info_data['nid_back']) && $applicant_info_data['nid_back'] != null) {
                 $applicant_info_data['nid_back'] =  $this->fileUploadService->uploadBase64File($applicant_info_data['nid_back'], Member::APPLICENT_NID);

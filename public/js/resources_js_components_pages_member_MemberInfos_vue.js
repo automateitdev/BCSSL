@@ -4718,7 +4718,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.hidden_field[data-v-6d4c05ec] {\r\n    display: flex;\r\n    gap: 7px;\n}\n.hidden_field a.close[data-v-6d4c05ec] {\r\n    font-size: 35px;\r\n    color: red;\r\n    z-index: 999;\n}\n.hidden_field a.edit[data-v-6d4c05ec] {\r\n    font-size: 20px;\r\n    margin-top: 2px;\r\n    color: green;\r\n    z-index: 999;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.hidden_field[data-v-6d4c05ec] {\n    display: flex;\n    gap: 7px;\n}\n.hidden_field a.close[data-v-6d4c05ec] {\n    font-size: 35px;\n    color: red;\n    z-index: 999;\n}\n.hidden_field a.edit[data-v-6d4c05ec] {\n    font-size: 20px;\n    margin-top: 2px;\n    color: green;\n    z-index: 999;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

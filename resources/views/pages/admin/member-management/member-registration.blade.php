@@ -17,7 +17,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <member-register :user-gender="{{$user_gender}}" />
+                            <member-register :user-gender="{{$user_gender}}" :user-blood-group="{{ $user_blood_group }}"/>
                         </div>
                     </div>
                 </div>
