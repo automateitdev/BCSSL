@@ -66,7 +66,7 @@
                                                     </small>
                                                     @endif
                                                   </div>
-                                                  <div class="form-group">
+                                                  {{-- <div class="form-group">
                                                     <label for="bcs_btct">BCS Batch & Cadre</label>
                                                     <input type="email" class="form-control" id="bcs_btct" value="{{$memberUpdateProfiles->member->bcs_batch ?? ''}}" readonly>
                                                     @if(!is_null($memberUpdateProfiles->bcs_batch))
@@ -74,7 +74,7 @@
                                                       Changes:  {{$memberUpdateProfiles->bcs_batch ?? ''}}
                                                     </small>
                                                     @endif
-                                                  </div>
+                                                  </div> --}}
                                                   <div class="form-group">
                                                     <label for="j_date">Joining Date</label>
                                                     <input type="date" class="form-control" id="j_date" value="{{$memberUpdateProfiles->member->joining_date ?? ''}}" readonly>
@@ -246,7 +246,7 @@
                                   </div>
                             </div>
 
-                            <div class="col-md-4">
+                            {{-- <div class="col-md-4">
                                 <div class="form-group">
                                     <label for="app_d_a_oa">Designation & Office Address</label>
                                     <input type="email" class="form-control" id="app_d_a_oa" value="{{$memberUpdateProfiles->member->office_address
@@ -257,7 +257,7 @@
                                     </small>
                                     @endif
                                   </div>
-                            </div>
+                            </div> --}}
 
                             <div class="col-md-4">
                                 <div class="form-group">

@@ -28,10 +28,10 @@
                                     <td style="text-align: center; width: 80%;">
                                         <div class="header-section2-inner">
                                             <h4 style="mb-0">
-                                                {{ !is_null(getSetting('name')) ? getSetting('name') : 'Cadre Officers’ Co-operative Society Limited (COCSOL)' }}
+                                                {{ !is_null(getSetting('name')) ? getSetting('name') : 'বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)' }}
                                             </h4>
                                             <h5 class="mt-0">
-                                                {{ !is_null(getSetting('address')) ? getSetting('address') : '' }}</h5>
+                                                {{ !is_null(getSetting('address')) ? getSetting('address') : 'bcss.limited@gmail.com' }}</h5>
                                             <p class="m-0">Registration No:01/2023 &nbsp; &nbsp; &nbsp; &nbsp;
                                                 Date:23/02/23</p>
                                             Email: {{ !is_null(getSetting('email')) ? getSetting('email') : '' }}
@@ -65,9 +65,9 @@
                                                 <td>:</td>
                                                 <td>{{ $member->name }}</td>
 
-                                                <td> <b>BCS Batch & Cadre</b></td>
+                                                {{-- <td> <b>BCS Batch & Cadre</b></td>
                                                 <td>:</td>
-                                                <td>{{ $member->bcs_batch }}</td>
+                                                <td>{{ $member->bcs_batch }}</td> --}}
                                             </tr>
 
                                             <tr>

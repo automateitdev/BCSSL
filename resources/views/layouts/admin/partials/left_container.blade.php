@@ -1,23 +1,12 @@
 <!-- Brand Logo -->
 <a href="#" class="brand-link mx-auto" style="text-align: center; max-width:120px">
-    <img src="{{ asset('storage/images/logo.jpeg') }}" alt="Cadre Officers’ Co-operative Society"
+    <img src="{{ asset('storage/images/logo.jpeg') }}" alt="BCSSL Logo"
         class="img-circle img-fluid img-responsive elevation-3" style="opacity: .8">
-    {{--  <span class="font-weight-light">
-        {{ !is_null(getSetting('name')) ? getSetting('name') : 'Cadre Officers’ Co-operative Society Limited (COCSOL)' }}</span> --}}
+
 </a>
 
 <!-- Sidebar -->
 <div class="sidebar">
-    <!-- Sidebar user panel (optional) -->
-    {{-- <div class="user-panel mt-3 pb-3 mb-3 d-flex">
-      <div class="image">
-        <img src="dist/img/user2-160x160.jpg" class="img-circle elevation-2" alt="User Image">
-      </div>
-      <div class="info">
-        <a href="#" class="d-block">Alexander Pierce</a>
-      </div>
-    </div> --}}
-
     <!-- SidebarSearch Form -->
     <div class="form-inline">
         <div class="input-group" data-widget="sidebar-search">

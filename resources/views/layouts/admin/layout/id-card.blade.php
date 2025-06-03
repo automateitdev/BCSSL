@@ -112,7 +112,7 @@
                         src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/images/logo.jpeg'))) }}"
                         alt="">
                     <p style="width:65%; margin:10px auto; text-align:center; color:#fff; font-weight:bold, font-size:0.6rem">
-                        Cadre Officers' Co-operative Society Limited (COCSOL), </p>
+                        বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL), </p>
 
                     <p style="width:60%; margin:0 auto; text-align:center; color:#fff; font-size:0.5rem">Registration no. 1
                         (Department of Cooperatives), Date 23.02.2023</p>
@@ -120,7 +120,7 @@
                         style="width: 100%; color: #fff; text-align: center; border-collapse: collapse; margin: 0 auto;">
                         <tr>
                             <td style="padding:2px; font-size: 0.4rem; text-align: left; width: 50%;">
-                                
+
                             </td>
                             <td style="padding:2px; font-size: 0.4rem; text-align: right; width: 50%;">
                                 Date 23.02.2023
@@ -163,7 +163,7 @@
                     <tbody>
                         <tr>
                             <td style="text-align: center; color:midnightblue; padding:4px; font-size:.6rem">
-                                www.cocsol.com.bd</td>
+                                www.bcssl.com.bd</td>
                         </tr>
                     </tbody>
                 </table>

@@ -17,7 +17,7 @@
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-body">
-                            <member-edit :user-gender="{{$user_gender}}" :member="{{json_encode($member)}}" />
+                            <member-edit :user-gender="{{$user_gender}}" :user-blood-group="{{ $user_blood_group }}" :member="{{json_encode($member)}}" />
                         </div>
                     </div>
                 </div>

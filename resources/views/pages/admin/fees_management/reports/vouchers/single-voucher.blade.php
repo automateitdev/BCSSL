@@ -19,51 +19,10 @@
 
                     <div class="card">
                         <div class="card-body">
-                            {{-- <table class="header-section-table">
-                                <tr class="header-section-table-tr">
-                                    <td style="    width: 10%;"></td>
-                                    <td style="    text-align: center;    width: 80%;">
-                                        <div class="header-section2-inner">
-                                            <h4>
-                                                {{ !is_null(getSetting('name')) ? getSetting('name') : 'Cadre Officers’ Co-operative Society Limited (COCSOL)' }}
-                                            </h4>
-                                            <p>--------</p>
-                                        </div>
-                                    </td>
-                                    <td style="width: 10%;">
-                                        <img src="data:image/png;base64, {!! $qrcode !!}">
-                                    </td>
-                                </tr>
-                            </table> --}}
 
-                            {{-- <h3 class='monny_receipt'>
-                            <b>Money Receipt</b>
-                        </h3> --}}
                             <div class="member_info_section">
                                 <div class="member_info_section_left">
                                     <div class="member_info">
-                                        {{-- <table>
-                                        <tr>
-                                            <td>      Member Id</td>
-                                            <td>:</td>
-                                            <td>{{optional(optional($paymentInfo->member)->associatorsInfo)->membershp_number}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>      Name</td>
-                                            <td>:</td>
-                                            <td>{{optional($paymentInfo->member)->name}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>      BCS Batch</td>
-                                            <td>:</td>
-                                            <td>{{optional($paymentInfo->member)->bcs_batch}}</td>
-                                        </tr>
-                                        <tr>
-                                            <td>     Cader Id</td>
-                                            <td>:</td>
-                                            <td>{{optional($paymentInfo->member)->cader_id}}</td>
-                                        </tr>
-                                    </table> --}}
 
                                         <table cellpadding="5" cellspacing="0" border="0" class="table table-bordered table-striped table-hover">
                                             <thead>

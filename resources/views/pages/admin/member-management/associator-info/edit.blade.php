@@ -25,7 +25,7 @@
 
                 </div>
                 <div class="form-group">
-                    <label for="membershp_number">COCSOL Membership Number (Office use only)
+                    <label for="membershp_number">BCSSL Membership Number (Office use only)
                     </label>
                     <input type="text" id="membershp_number" class="form-control" name="membershp_number" value="{{$assoc_info->membershp_number ?? old('membershp_number')}}" required>
                     @error('membershp_number')

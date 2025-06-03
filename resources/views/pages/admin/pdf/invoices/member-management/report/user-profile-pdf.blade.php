@@ -52,10 +52,10 @@
 
         <div class="header_section">
             <h1>
-               <strong> {{ !is_null(getSetting('name')) ? getSetting('name') : 'Cadre Officers’ Co-operative Society Limited (COCSOL)' }} </strong>
+               <strong> {{ !is_null(getSetting('name')) ? getSetting('name') : 'বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)' }} </strong>
             </h1>
-            <p>E-mail: {{  !is_null(getSetting('email')) ? getSetting('email') : 'cocsol2022@gmail.com' }} </p>
-            <h2> {{ !is_null( getSetting('address')) ?  getSetting('address') : 'House no-738, Flat-2/B, Ibrahimpur, P.O. Kafrul' }}  </h2>
+            <p>E-mail: {{  !is_null(getSetting('email')) ? getSetting('email') : '' }} </p>
+            <h2> {{ !is_null( getSetting('address')) ?  getSetting('address') : '' }}  </h2>
             {{-- <h2>P.S. Dhaka Cantonment, Dhaka</h2> --}}
         </div>
 
@@ -64,7 +64,7 @@
             <table>
 
                     <tr>
-                        <td colspan="2">COCSOL Membership Number (Office use only)</td>
+                        <td colspan="2">বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)</td>
                         <td colspan="2">
                             {{ optional($member->associatorsInfo)->membershp_number ?? '' }}
                         </td>
@@ -118,14 +118,12 @@
                     </td>
 
                 </tr>
-                <tr>
+                {{-- <tr>
                     <td style="    width: 20%;">BCS Batch & Cadre
                     </td>
 
                     <td style="    width: 65%;">  {{$member->bcs_batch ?? ''}}</td>
-
-
-                </tr>
+                </tr> --}}
                 <tr>
                     <td style="    width: 20%;">Joining Date
                     </td>
@@ -141,9 +139,9 @@
                        </div>
 
                     </td>
-                    <td >
+                    {{-- <td >
                         {{ $member->cader_id ?? '' }}
-                    </td>
+                    </td> --}}
                 </tr>
                 <tr>
                     <td style="    width: 20%;">Date of Birth
@@ -185,22 +183,23 @@
 
                 </tr>
                 <tr>
-                    <td style="    width: 20%;">Designation &
-                        Office Address
-                    </td>
-
+                    <td style="    width: 20%;">Occupation</td>
                     <td colspan="2">
-                        {{ $member->office_address ?? '' }}
-
+                        {{ $member->current_occupation ?? '' }}
                     </td>
-
                 </tr>
+
+                <tr>
+                    <td style="    width: 20%;">Designation</td>
+                    <td colspan="2">
+                        {{ $member->current_designation ?? '' }}
+                    </td>
+                </tr>
+
                 <tr>
                     <td style="    width: 20%;">National ID Number
                     </td>
-
                     <td colspan="2">
-
                         {{ $member->nid ?? '' }}
                     </td>
 

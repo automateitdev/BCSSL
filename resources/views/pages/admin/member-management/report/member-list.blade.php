@@ -41,8 +41,8 @@
                                 <th width='15%'>Member Name</th>
                                 <th width='15%'>Image</th>
                                 <th width='15%'>Email</th>
-                                <th width='15%'>Cader Id</th>
-                                <th width='15%'>BCS Batch</th>
+                                {{-- <th width='15%'>Cader Id</th>
+                                <th width='15%'>BCS Batch</th> --}}
                                 <th width='15%'>Gender</th>
                                 <th width='15%'>Status</th>
 
@@ -187,14 +187,14 @@
                         data: 'email',
                         name: 'email'
                     },
-                    {
-                        data: 'cader_id',
-                        name: 'cader_id'
-                    },
-                    {
-                        data: 'bcs_batch',
-                        name: 'bcs_batch'
-                    },
+                    // {
+                    //     data: 'cader_id',
+                    //     name: 'cader_id'
+                    // },
+                    // {
+                    //     data: 'bcs_batch',
+                    //     name: 'bcs_batch'
+                    // },
                     {
                         data: 'gender',
                         name: 'gender'

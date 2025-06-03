@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.admin.partials.style')
 
-    <title>@yield('title','BCS Officers Association')</title>
+    <title>@yield('title','BCSSL - বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড')</title>
  <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
 </head>

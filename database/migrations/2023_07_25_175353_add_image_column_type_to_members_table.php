@@ -18,8 +18,6 @@ class AddImageColumnTypeToMembersTable extends Migration
             $table->string('nid_front')->nullable()->change();
             $table->string('nid_back')->nullable()->change();
             $table->string('signature')->nullable()->change();
-            $table->string('proof_joining_cadre')->nullable()->change();
-            $table->string('proof_signed_by_sup_author')->nullable()->change();
         });
     }
 

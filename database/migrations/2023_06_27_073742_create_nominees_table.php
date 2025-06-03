@@ -27,6 +27,7 @@ class CreateNomineesTable extends Migration
             $table->date('birth_date');
             $table->string('gender');
             $table->string('mobile');
+            $table->string('email')->nullable();
             $table->text('relation_with_user');
             $table->string('nid');
             $table->string('nid_front')->nullable();

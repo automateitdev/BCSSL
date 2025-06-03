@@ -26,9 +26,9 @@
                                 <td style="text-align: center; width: 80%;">
                                     <div class="header-section2-inner">
                                         <h4 style="mb-0">
-                                            {{ !is_null(getSetting('name')) ? getSetting('name') : 'Cadre Officers’ Co-operative Society Limited (COCSOL)' }}
+                                            {{ !is_null(getSetting('name')) ? getSetting('name') : 'বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)' }}
                                         </h4>
-                                            <h5 class="mt-0">{{ !is_null(getSetting('address')) ? getSetting('address') : ''}}</h5>
+                                            <h5 class="mt-0">{{ !is_null(getSetting('address')) ? getSetting('address') : 'bcss.limited@gmail.com'}}</h5>
                                             <p class="m-0">Registration No:01/2023 &nbsp; &nbsp; &nbsp; &nbsp; Date:23/02/23</p>
                                             Email: {{ !is_null(getSetting('email')) ? getSetting('email') : ''}}
                                         <br>
@@ -61,10 +61,10 @@
                                             <td>{{$paymentInfo->invoice_no}}</td>
                                         </tr>
                                         <tr>
-                                            <td>     <b>BCS Batch & Cadre</b></td>
+                                            {{-- <td>     <b>BCS Batch & Cadre</b></td>
                                             <td>:</td>
                                             <td>{{optional($paymentInfo->member)->bcs_batch}}</td>
-                                            <td><pre style="margin: 0"></pre></td>
+                                            <td><pre style="margin: 0"></pre></td> --}}
 
                                             <td> <b>Payment Date</b></td>
                                             <td>:</td>

@@ -203,84 +203,6 @@
                             </div>
                         </div>
 
-                        <!-- <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="bcs_batch" class="form-label"
-                                    >BCS Batch & Cadre <span>*</span></label
-                                ><svg width="16" height="16"></svg>
-                                <input
-                                    type="text"
-                                    class="form-control"
-                                    id="bcs_batch"
-                                    name="bcs_batch"
-                                    v-model.trim="
-                                        $v.form.applicant_info.bcs_batch.$model
-                                    "
-                                />
-                                <div
-                                    class="error"
-                                    style="color: red"
-                                    v-if="
-                                        !$v.form.applicant_info.bcs_batch
-                                            .required && additional_info_error
-                                    "
-                                >
-                                    Field is required
-                                </div>
-                            </div>
-                        </div> -->
-
-                        <!-- <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="joining_date" class="form-label"
-                                    >Joining Date <span>*</span></label
-                                ><svg width="16" height="16"></svg>
-
-                                <input
-                                    class="form-control"
-                                    type="date"
-                                    id="joining_date"
-                                    name="joining_date"
-                                    v-model.trim="
-                                        $v.form.applicant_info.joining_date
-                                            .$model
-                                    "
-                                />
-                                <div
-                                    class="error"
-                                    style="color: red"
-                                    v-if="
-                                        !$v.form.applicant_info.joining_date
-                                            .required && additional_info_error
-                                    "
-                                >
-                                    Field is required
-                                </div>
-                            </div>
-                        </div> -->
-                        <!-- <div class="col-md-6">
-                            <div class="mb-3">
-                                <label for="cader_id" class="form-label"
-                                    >Cadre ID </label
-                                ><svg width="16" height="16"></svg>
-
-                                <input
-                                    class="form-control"
-                                    type="number"
-                                    id="cader_id"
-                                    name="cader_id"
-                                    v-model.trim="
-                                        $v.form.applicant_info.cader_id.$model
-                                    "
-                                />
-                                <div
-                                    class="error"
-                                    style="color: red"
-                                    v-if="!$v.form.applicant_info.cader_id.numeric && additional_info_error">
-                                    Field is numeric
-                                </div>
-                            </div>
-                        </div> -->
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="birth_date" class="form-label"
@@ -308,7 +230,6 @@
                                 </div>
                             </div>
                         </div>
-
 
                         <div class="col-md-6">
                             <div class="mb-3">
@@ -357,7 +278,8 @@
                                     class="form-select"
                                     name="blood_group"
                                     v-model.trim="
-                                        $v.form.applicant_info.blood_group.$model
+                                        $v.form.applicant_info.blood_group
+                                            .$model
                                     "
                                 >
                                     <option selected="selected" disabled>
@@ -384,7 +306,6 @@
                             </div>
                         </div>
 
-
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="mobile" class="form-label"
@@ -399,16 +320,7 @@
                                     "
                                     @update="applicent_mobile_number"
                                 />
-                                <!-- <input
-                                    class="form-control"
-                                    type="text"
-                                    id="mobile"
-                                    name="mobile"
-                                    value="+88"
-                                    v-model.trim="
-                                        $v.form.applicant_info.mobile.$model
-                                    "
-                                /> -->
+
                                 <div
                                     class="error"
                                     style="color: red"
@@ -423,15 +335,15 @@
                         </div>
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="email" class="form-label"
+                                <label for="applicant_email" class="form-label"
                                     >Email Address <span>*</span></label
                                 ><svg width="16" height="16"></svg>
 
                                 <input
                                     class="form-control"
                                     type="email"
-                                    id="email"
-                                    name="email"
+                                    id="applicant_email"
+                                    name="applicant_email"
                                     v-model.trim="
                                         $v.form.applicant_info.email.$model
                                     "
@@ -530,7 +442,9 @@
 
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="current_occupation" class="form-label"
+                                <label
+                                    for="current_occupation"
+                                    class="form-label"
                                     >Current Occupation <span>*</span></label
                                 ><svg width="16" height="16"></svg>
 
@@ -540,14 +454,16 @@
                                     id="current_occupation"
                                     name="current_occupation"
                                     v-model.trim="
-                                        $v.form.applicant_info.current_occupation.$model
+                                        $v.form.applicant_info
+                                            .current_occupation.$model
                                     "
                                 />
                                 <div
                                     class="error"
                                     style="color: red"
                                     v-if="
-                                        !$v.form.applicant_info.current_occupation.required &&
+                                        !$v.form.applicant_info
+                                            .current_occupation.required &&
                                         additional_info_error
                                     "
                                 >
@@ -558,7 +474,9 @@
 
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="current_designation" class="form-label"
+                                <label
+                                    for="current_designation"
+                                    class="form-label"
                                     >Current Designation <span>*</span></label
                                 ><svg width="16" height="16"></svg>
 
@@ -568,14 +486,16 @@
                                     id="current_designation"
                                     name="current_designation"
                                     v-model.trim="
-                                        $v.form.applicant_info.current_designation.$model
+                                        $v.form.applicant_info
+                                            .current_designation.$model
                                     "
                                 />
                                 <div
                                     class="error"
                                     style="color: red"
                                     v-if="
-                                        !$v.form.applicant_info.current_designation.required &&
+                                        !$v.form.applicant_info
+                                            .current_designation.required &&
                                         additional_info_error
                                     "
                                 >
@@ -584,10 +504,11 @@
                             </div>
                         </div>
 
-
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="current_occupation_joining" class="form-label"
+                                <label
+                                    for="current_occupation_joining"
+                                    class="form-label"
                                     >Joining Date <span>*</span></label
                                 ><svg width="16" height="16"></svg>
 
@@ -597,14 +518,16 @@
                                     id="current_occupation_joining"
                                     name="current_occupation_joining"
                                     v-model.trim="
-                                        $v.form.applicant_info.current_occupation_joining.$model
+                                        $v.form.applicant_info
+                                            .current_occupation_joining.$model
                                     "
                                 />
                                 <div
                                     class="error"
                                     style="color: red"
                                     v-if="
-                                        !$v.form.applicant_info.current_occupation_joining
+                                        !$v.form.applicant_info
+                                            .current_occupation_joining
                                             .required && additional_info_error
                                     "
                                 >
@@ -613,11 +536,11 @@
                             </div>
                         </div>
 
-
-
                         <div class="col-md-6">
                             <div class="mb-3">
-                                <label for="current_office_address" class="form-label"
+                                <label
+                                    for="current_office_address"
+                                    class="form-label"
                                     >Current Office Address </label
                                 ><svg width="16" height="16"></svg>
 
@@ -627,8 +550,8 @@
                                     name="current_office_address"
                                     rows="3"
                                     v-model.trim="
-                                        $v.form.applicant_info.current_office_address
-                                            .$model
+                                        $v.form.applicant_info
+                                            .current_office_address.$model
                                     "
                                 ></textarea>
                             </div>
@@ -717,6 +640,9 @@
                                 </div>
                             </div>
                         </div>
+
+                        <div class="col-md-6"></div>
+
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="signature" class="form-label"
@@ -772,51 +698,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-5">
-                            <div class="mb-3">
-                                <label for="proof_join_cadre" class="form-label"
-                                    >Proof of joining cadre service (Copy of the
-                                    first joining letter), <span>*</span></label
-                                ><svg width="16" height="16"></svg>
-                                <input
-                                    type="file"
-                                    class="form-control-file"
-                                    id="proof_join_cadre"
-                                    @change="joiningCadreFileChange($event)"
-                                />
 
-                                <div
-                                    class="error"
-                                    style="color: red"
-                                    v-if="user_join_cader_error"
-                                >
-                                    Field is required
-                                </div>
-                            </div>
-                        </div>
-                        <div class="col-md-7">
-                            <div class="mb-3">
-                                <label for="proof_join_cadre" class="form-label"
-                                    >Proof of designation and current station
-                                    signed by the supervising authority
-                                    <span>*</span></label
-                                ><svg width="16" height="16"></svg>
-                                <input
-                                    type="file"
-                                    class="form-control-file"
-                                    id="proof_join_cadre"
-                                    @change="proofSupervisAuthorChange($event)"
-                                />
-
-                                <div
-                                    class="error"
-                                    style="color: red"
-                                    v-if="user_supervis_auth_error"
-                                >
-                                    Field is required
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nid" class="form-label"
@@ -844,6 +726,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nid" class="form-label"
@@ -871,10 +754,11 @@
                                 </div>
                             </div>
                         </div>
+
                         <div class="col-md-6">
                             <div class="mb-3">
                                 <label for="nid" class="form-label"
-                                    >Reference Member Id Number
+                                    >Reference Membership Number
                                     <span>*</span></label
                                 ><svg width="16" height="16"></svg>
 
@@ -1130,16 +1014,6 @@
                                     "
                                     @update="nominee_mobile_number"
                                 />
-                                <!-- <input
-                                    class="form-control"
-                                    type="text"
-                                    id="nominee_mobile"
-                                    name="mobile"
-                                    value="+88"
-                                    v-model.trim="
-                                        $v.form.nominee_info.mobile.$model
-                                    "
-                                /> -->
                                 <div
                                     class="error"
                                     style="color: red"
@@ -1149,6 +1023,35 @@
                                     "
                                 >
                                     Field is required
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="col-md-6">
+                            <div class="mb-3">
+                                <label for="nominee_email" class="form-label"
+                                    >Email Address </label
+                                ><svg width="16" height="16"></svg>
+
+                                <input
+                                    class="form-control"
+                                    type="email"
+                                    id="nominee_email"
+                                    name="nominee_email"
+                                    v-model.trim="
+                                        $v.form.nominee_info.email.$model
+                                    "
+                                />
+
+                                <div
+                                    class="error"
+                                    style="color: red"
+                                    v-if="
+                                        !$v.form.nominee_info.email.email &&
+                                        nominee_info_error
+                                    "
+                                >
+                                    Field is Email
                                 </div>
                             </div>
                         </div>
@@ -1188,7 +1091,7 @@
                                     >Relationship with Applicant</label
                                 ><svg width="16" height="16"></svg>
 
-                                <textarea
+                                <input
                                     class="form-control"
                                     id="relation_with_user"
                                     name="relation_with_user"
@@ -1197,7 +1100,7 @@
                                         $v.form.nominee_info.relation_with_user
                                             .$model
                                     "
-                                ></textarea>
+                                />
                                 <div
                                     class="error"
                                     style="color: red"
@@ -1230,7 +1133,7 @@
                                 ></textarea>
                             </div>
                         </div>
-                        <div class="col-md-12">
+                        <div class="col-md-6">
                             <div class="mb-3">
                                 <label
                                     for="nominee_permanent_address"
@@ -2207,24 +2110,23 @@ export default {
                     mother_name: "",
                     spouse_name: "",
                     image: "",
-                    bcs_batch: "",
-                    // joining_date: "",
-                    cader_id: "",
                     birth_date: "",
                     gender: "",
+                    blood_group: "",
                     mobile: "",
                     email: "",
                     password: "",
                     nid: "",
-                    // office_address: "",
+                    current_occupation: "",
+                    current_designation: "",
+                    current_occupation_joining: "",
+                    current_office_address: "",
                     present_address: "",
                     permanent_address: "",
                     emergency_contact: "",
                     signature: "",
                     nid_front: "",
                     nid_back: "",
-                    proof_joining_cadre: "",
-                    proof_signed_by_sup_author: "",
                     formattedNumber: "",
                     country_code: "BD",
                     ref_name: "",
@@ -2239,6 +2141,7 @@ export default {
                     birth_date: "",
                     gender: "",
                     mobile: "",
+                    email: "",
                     relation_with_user: "",
                     nid: "",
                     professional_details: "",
@@ -2280,105 +2183,6 @@ export default {
                         p_introducer_name: "",
                         p_introducer_member_num: "",
                     },
-                    // pref_of_dcc: [
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    // ],
-                    // pref_close_dcc: [
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    // ],
-
-                    // flat_size: [
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    // ],
-                    // exp_bank_loan: [
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    // ],
-                    // num_flat_shares: [
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    // ],
-                    // distict_pref: [
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    // ],
-                    // capacity_range: [
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    //     {
-                    //         name: "",
-                    //     },
-                    // ],
                 },
             },
             user_image_error: false,
@@ -2514,55 +2318,40 @@ export default {
                 },
                 mother_name: {
                     required,
-                    // minLength: minLength(3),
                 },
-                spouse_name: {
-                    required: false,
-                },
-                image: {
-                    required: false,
-                },
-                // bcs_batch: {
-                //     required,
-                // },
+                spouse_name: {},
 
-                // joining_date: {
-                //     required,
-                // },
+                image: {},
 
-                // cader_id: {
-                //     required: false,
-                //     numeric,
-                // },
                 birth_date: {
                     required,
                 },
+
                 gender: {
                     required,
                 },
 
                 blood_group: {
-                   required,
+                    required,
                 },
 
                 mobile: {
                     required,
                 },
+
                 email: {
                     required,
                     email,
                 },
+
                 password: {
                     required,
                     minLength: minLength(6),
                 },
+
                 nid: {
                     required,
                 },
-
-                // office_address: {
-                //     required: false,
-                // },
 
                 current_occupation: {
                     required: true,
@@ -2573,28 +2362,14 @@ export default {
                 },
 
                 current_occupation_joining: {
-                   required:true,
+                    required: true,
                 },
 
-                current_office_address: {
-                    required: false,
-                },
+                current_office_address: {},
 
-                present_address: {
-                    required: false,
-                },
-                permanent_address: {
-                    required: false,
-                },
-                emergency_contact: {
-                    required: false,
-                },
-                proof_joining_cadre: {
-                    required: false,
-                },
-                proof_signed_by_sup_author: {
-                    required: false,
-                },
+                present_address: {},
+                permanent_address: {},
+                emergency_contact: {},
                 ref_name: {
                     required,
                 },
@@ -2628,69 +2403,25 @@ export default {
                 mobile: {
                     required,
                 },
+
+                email: {
+                    email,
+                },
+
                 relation_with_user: {
                     required,
                 },
                 permanent_address: {
                     required,
                 },
-                professional_details: {
-                    required: false,
-                },
+                professional_details: {},
                 nid: {
                     required,
                 },
-                nid_front: {
-                    required: false,
-                },
-                nid_back: {
-                    required: false,
-                },
+                nid_front: {},
+                nid_back: {},
             },
-            member_choice: {
-                // distict_pref: {
-                //     required: false,
-                //     $each: {
-                //         name: { required: false },
-                //     },
-                // },
-                // pref_of_dcc: {
-                //     required: false,
-                //     $each: {
-                //         name: { required: false },
-                //     },
-                // },
-                // pref_close_dcc: {
-                //     required: false,
-                //     $each: {
-                //         name: { required: false },
-                //     },
-                // },
-                // capacity_range: {
-                //     required: false,
-                //     $each: {
-                //         name: { required: false },
-                //     },
-                // },
-                // flat_size: {
-                //     required: false,
-                //     $each: {
-                //         name: { required: false },
-                //     },
-                // },
-                // exp_bank_loan: {
-                //     required: false,
-                //     $each: {
-                //         name: { required: false },
-                //     },
-                // },
-                // num_flat_shares: {
-                //     required: false,
-                //     $each: {
-                //         name: { required: false },
-                //     },
-                // },
-            },
+            member_choice: {},
         },
     },
     created() {
@@ -2790,32 +2521,6 @@ export default {
         nominee_mobile_number(event) {
             this.form.nominee_info.country_code = event.countryCode;
             this.form.nominee_info.formattedNumber = event.formattedNumber;
-        },
-        proofSupervisAuthorChange(event) {
-            // console.log(type);
-            let self = this;
-            let file = event.target.files[0];
-            const reader = new FileReader();
-            self.user_supervis_auth_error = false;
-            reader.onload = (event) => {
-                self.form.applicant_info.proof_signed_by_sup_author =
-                    event.target.result;
-            };
-
-            reader.readAsDataURL(file);
-        },
-        joiningCadreFileChange(event) {
-            // console.log(type);
-            let self = this;
-            let file = event.target.files[0];
-            const reader = new FileReader();
-            self.user_join_cader_error = false;
-            reader.onload = (event) => {
-                self.form.applicant_info.proof_joining_cadre =
-                    event.target.result;
-            };
-
-            reader.readAsDataURL(file);
         },
         nomineeNIDImage(type) {
             if (type == "fontend") {
@@ -2967,6 +2672,7 @@ export default {
                 this.$v.form.nominee_info.birth_date.$invalid ||
                 this.$v.form.nominee_info.gender.$invalid ||
                 this.$v.form.nominee_info.mobile.$invalid ||
+                this.$v.form.nominee_info.email.$invalid ||
                 this.$v.form.nominee_info.relation_with_user.$invalid ||
                 this.$v.form.nominee_info.permanent_address.$invalid ||
                 this.$v.form.nominee_info.nid.$invalid
@@ -3008,29 +2714,16 @@ export default {
             }
             this.user_nid_bc_error = false;
 
-            if (this.form.applicant_info.proof_joining_cadre == "") {
-                this.user_join_cader_error = true;
-                this.additional_info_error = true;
-                return false;
-            }
-            this.user_join_cader_error = false;
-
-            if (this.form.applicant_info.proof_signed_by_sup_author == "") {
-                this.user_supervis_auth_error = true;
-                this.additional_info_error = true;
-                return false;
-            }
-            this.user_supervis_auth_error = false;
-
             if (
                 this.$v.form.applicant_info.name.$invalid ||
                 this.$v.form.applicant_info.father_name.$invalid ||
                 this.$v.form.applicant_info.mother_name.$invalid ||
-                // this.$v.form.applicant_info.bcs_batch.$invalid ||
-                this.$v.form.applicant_info.joining_date.$invalid ||
-                // this.$v.form.applicant_info.cader_id.$invalid ||
+                this.$v.form.applicant_info.current_occupation.$invalid ||
+                this.$v.form.applicant_info.current_designation.$invalid ||
+                this.$v.form.applicant_info.current_occupation_joining.$invalid ||
                 this.$v.form.applicant_info.birth_date.$invalid ||
                 this.$v.form.applicant_info.gender.$invalid ||
+                this.$v.form.applicant_info.blood_group.$invalid ||
                 this.$v.form.applicant_info.mobile.$invalid ||
                 this.$v.form.applicant_info.email.$invalid ||
                 this.$v.form.applicant_info.password.$invalid ||
@@ -3045,18 +2738,6 @@ export default {
             return true;
         },
         async finalTabChange() {
-            // this.$v.$touch();
-            // if (
-            //     this.$v.form.member_choice.pref_of_dcc.$invalid ||
-            //     this.$v.form.member_choice.pref_close_dcc.$invalid ||
-            //     this.$v.form.member_choice.flat_size.$invalid ||
-            //     this.$v.form.member_choice.exp_bank_loan.$invalid ||
-            //     this.$v.form.member_choice.num_flat_shares.$invalid
-            // ) {
-            //     this.final_change_error = true;
-            //     return false;
-            // }
-            // alert("Form submitted");
             this.final_change_error = false;
             this.memberRegister();
             return true;
@@ -3094,9 +2775,6 @@ export default {
                 this.account_waiting_apporve = true;
                 localStorage.removeItem("approved_wait");
             }
-            // this.form.applicant_info.country_code = this.member.country_code;
-            // this.form.nominee_info.country_code =
-            //     this.member.nominee.country_code;
         },
     },
 };

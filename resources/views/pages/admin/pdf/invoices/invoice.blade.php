@@ -73,7 +73,7 @@
                 <td style="    text-align: center;    width: 80%;">
                     <div class="header-section2-inner">
                         <h4>
-                            {{ !is_null(getSetting('name')) ? getSetting('name') : 'Cadre Officers’ Co-operative Society Limited (COCSOL)' }}
+                            {{ !is_null(getSetting('name')) ? getSetting('name') : 'বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)' }}
                         </h4>
                     </div>
                 </td>

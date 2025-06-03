@@ -18,6 +18,7 @@ class Nominee extends Model
         'birth_date',
         'gender',
         'mobile',
+        'email',
         'formatted_number',
         'country_code',
         'relation_with_user',
@@ -26,7 +27,6 @@ class Nominee extends Model
         'nid_back',
         'professional_details',
         'permanent_address',
-
     ];
 
     public const NOMINEE_IMAGE = 'nominee/user';

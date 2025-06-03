@@ -20,7 +20,6 @@ return [
     'allowed_methods' => ['*'],
 
     'allowed_origins' => ['*', 'http://localhost:3000', 'localhost:3000'],
-    // 'allowed_origins' => ['https://cocsol.com.bd/', 'http://cocsol.com.bd/'],
 
     'allowed_origins_patterns' => [],
 
