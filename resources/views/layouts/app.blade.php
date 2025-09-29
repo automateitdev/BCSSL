@@ -7,7 +7,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>BCSSL - বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড</title>
+    <title>{{ config('app.title') }}</title>
     <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
     <!-- Scripts -->
