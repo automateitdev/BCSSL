@@ -17,6 +17,10 @@ return [
     'title' => env('APP_TITLE', 'FCMS'),
     'short_code' => env('APP_SHORT_CODE', 'FCMS'),
 
+    'spg_username' => env('SPG_USERNAME', ''),
+    'spg_password' => env('SPG_PASSWORD', ''),
+    'spg_account' => env('SPG_ACCOUNT', ''),
+
     /*
     |--------------------------------------------------------------------------
     | Application Environment

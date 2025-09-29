@@ -36,10 +36,10 @@ class PaymentController extends Controller
     {
         $this->fileUploadService = $fileUploadService;
         //live
-        $this->spg_access_username = 'CFOSL';
-        $this->spg_access_password = 'Cerere#eeeWW';
-        $this->spg_ar_account = '4446102001029';
-        $this->spg_auth = 'Basic Q0ZPU0w6Q2VyZXJlI2VlZVdX';
+        $this->spg_access_username = config('app.spg_username');
+        $this->spg_access_password = config('app.spg_password');
+        $this->spg_ar_account = config('app.spg_account');
+        // $this->spg_auth = 'Basic Q0ZPU0w6Q2VyZXJlI2VlZVdX';
         $this->spg_base_url_api = 'https://spg.com.bd:6314/';
         $this->spg_redirect_url = "https://spg.com.bd:6313/";
         // //local
@@ -140,7 +140,7 @@ class PaymentController extends Controller
                 //API 1 (access_token )
                 $headers = [
                     'Content-Type' => 'application/JSON',
-                    'Authorization' =>  $this->spg_auth,
+                    // 'Authorization' =>  $this->spg_auth,
                 ];
                 $body_data = '{"AccessUser":
                           {"userName": "' . $this->spg_access_username . '",

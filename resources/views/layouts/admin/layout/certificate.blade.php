@@ -112,7 +112,7 @@
                         <div
                             style="display: inline-block; width: 100%; margin:0 auto; margin-top:120px; text-align:center">
                             <h1 style="font-size: 1.2rem; text-transform: capitalize">
-                                {{ config('app.') }}
+                                {{ config('app.title') }}
                             </h1>
                             <div
                                 style="
