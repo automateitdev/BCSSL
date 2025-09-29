@@ -8,7 +8,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     @include('layouts.admin.partials.style')
 
-    <title>@yield('title',{{ config('app.title') }})</title>
+    <title>@yield('title', config('app.title'))</title>
  <link rel="icon" href="{{ asset('favicon.ico') }}" type="image/x-icon">
 
 </head>
