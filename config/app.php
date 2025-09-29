@@ -14,6 +14,8 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'title' => env('APP_TITLE', 'FCMS'),
+    'short_code' => env('APP_SHORT_CODE', 'FCMS'),
 
     /*
     |--------------------------------------------------------------------------

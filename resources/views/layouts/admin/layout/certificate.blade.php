@@ -112,7 +112,7 @@
                         <div
                             style="display: inline-block; width: 100%; margin:0 auto; margin-top:120px; text-align:center">
                             <h1 style="font-size: 1.2rem; text-transform: capitalize">
-                                বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)
+                                {{ config('app.') }}
                             </h1>
                             <div
                                 style="
@@ -171,7 +171,7 @@
                         Act, Rules & Registered Bye law {{ $member['gender'] == 'male' ? 'he' : '' }}
                         {{ $member['gender'] == 'female' ? 'sh' : '' }} {{ $member['gender'] == 'others' ? '-' : '' }}
                         is entitled <span class="dotted_line">{{ $member['associators_info']['num_or_shares'] }}</span>
-                        share of taka 1000/- (One Thousand) of BCSSL {{ $member['gender'] == 'male' ? 'His' : '' }}
+                        share of taka 1000/- (One Thousand) of {{ config('app.short_code') }} {{ $member['gender'] == 'male' ? 'His' : '' }}
                         {{ $member['gender'] == 'female' ? 'Her' : '' }} {{ $member['gender'] == 'others' ? '-' : '' }} Member
                         ID is <span class="dotted_line">{{ $member['associators_info']['membershp_number'] }}</span>
                     </p>

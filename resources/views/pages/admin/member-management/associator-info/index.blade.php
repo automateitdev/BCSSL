@@ -25,7 +25,7 @@
                             <th>Name</th>
                             <th>Mobile</th>
 
-                            <th>BCSSL Membership Number</th>
+                            <th>Membership Number</th>
                             <th>Date of approval</th>
                             <th>Number of share/s
                             </th>

@@ -73,7 +73,7 @@
                 <td style="    text-align: center;    width: 80%;">
                     <div class="header-section2-inner">
                         <h4>
-                            {{ !is_null(getSetting('name')) ? getSetting('name') : 'বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)' }}
+                            {{ !is_null(getSetting('name')) ? getSetting('name') : '{{ config('app.title') }}' }}
                         </h4>
                     </div>
                 </td>

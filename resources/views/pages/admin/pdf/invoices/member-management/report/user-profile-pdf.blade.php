@@ -52,7 +52,7 @@
 
         <div class="header_section">
             <h1>
-               <strong> {{ !is_null(getSetting('name')) ? getSetting('name') : 'বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)' }} </strong>
+               <strong> {{ !is_null(getSetting('name')) ? getSetting('name') : '{{ config('app.title') }}' }} </strong>
             </h1>
             <p>E-mail: {{  !is_null(getSetting('email')) ? getSetting('email') : '' }} </p>
             <h2> {{ !is_null( getSetting('address')) ?  getSetting('address') : '' }}  </h2>
@@ -64,7 +64,7 @@
             <table>
 
                     <tr>
-                        <td colspan="2">বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)</td>
+                        <td colspan="2">{{ config('app.title') }}</td>
                         <td colspan="2">
                             {{ optional($member->associatorsInfo)->membershp_number ?? '' }}
                         </td>

@@ -1,6 +1,6 @@
 <!-- Brand Logo -->
 <a href="#" class="brand-link mx-auto" style="text-align: center; max-width:120px">
-    <img src="{{ asset('storage/images/logo.jpeg') }}" alt="BCSSL Logo"
+    <img src="{{ asset('storage/images/logo.jpeg') }}" alt="Logo"
         class="img-circle img-fluid img-responsive elevation-3" style="opacity: .8">
 
 </a>

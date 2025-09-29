@@ -112,7 +112,7 @@
                         src="data:image/png;base64,{{ base64_encode(file_get_contents(storage_path('app/public/images/logo.jpeg'))) }}"
                         alt="">
                     <p style="width:65%; margin:10px auto; text-align:center; color:#fff; font-weight:bold, font-size:0.6rem">
-                        বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL), </p>
+                        {{ config('app.title') }}, </p>
 
                     <p style="width:60%; margin:0 auto; text-align:center; color:#fff; font-size:0.5rem">Registration no. 1
                         (Department of Cooperatives), Date 23.02.2023</p>
@@ -163,7 +163,7 @@
                     <tbody>
                         <tr>
                             <td style="text-align: center; color:midnightblue; padding:4px; font-size:.6rem">
-                                www.bcssl.com.bd</td>
+                                {{ config('app.url') }}</td>
                         </tr>
                     </tbody>
                 </table>

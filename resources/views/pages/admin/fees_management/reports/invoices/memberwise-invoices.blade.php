@@ -28,7 +28,7 @@
                                     <td style="text-align: center; width: 80%;">
                                         <div class="header-section2-inner">
                                             <h4 style="mb-0">
-                                                {{ !is_null(getSetting('name')) ? getSetting('name') : 'বন্ধন চাকুরিজীবী সমবায় সমিতি লিমিটেড (BCSSL)' }}
+                                                {{ !is_null(getSetting('name')) ? getSetting('name') : '{{ config('app.title') }}' }}
                                             </h4>
                                             <h5 class="mt-0">
                                                 {{ !is_null(getSetting('address')) ? getSetting('address') : 'bcss.limited@gmail.com' }}</h5>
