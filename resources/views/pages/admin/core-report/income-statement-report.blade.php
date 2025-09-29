@@ -57,7 +57,7 @@
 
 <body>
     <div style="position: relative; width:100%">
-        <h2 style="text-align: center">Cadre Officers' Co-operative Society Limited</h2>
+        <h2 style="text-align: center">{{ config('app.title') }}</h2>
         <h3 style="text-align: center">Income Statement [{{ $from }}, {{ $to }}]</h3>
         <table cellspacing="3" width="95%">
             <thead>

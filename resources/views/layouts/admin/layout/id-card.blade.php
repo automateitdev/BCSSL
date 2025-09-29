@@ -171,7 +171,7 @@
             <div class="id-card back">
                 <div style="position: relative; tex-align:center; background-color:midnightblue; padding:10px 0">
                     <p style="font-style: italic; color:white; text-align:center"><small>This Card is the property of
-                            Cadre Officers' Co-operative Society Limited</small></p>
+                            {{ config('app.title') }}</small></p>
                     <p style="width:60%; margin:0 auto; padding:0; text-align:center; color:#fff; font-size:0.5rem">Registration no. 1
                         (Department of Cooperatives), Date 23.02.2023</p>
                     {{-- <table
