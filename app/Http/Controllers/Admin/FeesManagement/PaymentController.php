@@ -35,28 +35,12 @@ class PaymentController extends Controller
     public function __construct(FileUploadService $fileUploadService)
     {
         $this->fileUploadService = $fileUploadService;
-        //live
         $this->spg_access_username = config('app.spg_username');
         $this->spg_access_password = config('app.spg_password');
         $this->spg_ar_account = config('app.spg_account');
-        // $this->spg_auth = 'Basic Q0ZPU0w6Q2VyZXJlI2VlZVdX';
-        $this->spg_base_url_api = 'https://spg.com.bd:6314/';
-        $this->spg_redirect_url = "https://spg.com.bd:6313/";
-        // //local
-        // $this->spg_base_url_api = 'https://spg.sblesheba.com:6314/';
-        // $this->spg_redirect_url = "https://spg.sblesheba.com:6313/";
-        // $this->spg_access_username = 'a2i@pmo';
-        // $this->spg_access_password = 'sbPayment0002';
-        // $this->spg_ar_account = '0002601020871';
-        // $this->spg_auth = 'Basic ZHVVc2VyMjAxNDpkdVVzZXJQYXltZW50MjAxNA==';
-
-
-        // Test: https://spg.sblesheba.com:6313 to Live: https://spg.com.bd:6313 [redirect url]
-        // Test: https://spg.sblesheba.com:6314 to Live: https://spg.com.bd:6314 [api url]
-
-
-        // $this->middleware(['auth:admin'])->only(['paymentCreate']);
-        // $this->middleware(['auth:web'])->only(['paymentCreate']);
+        $this->spg_auth = config('app.spg_auth');
+        $this->spg_base_url_api = config('app.spg_base_url');
+        $this->spg_redirect_url = config('app.spg_redirect_url');
 
         $this->middleware(function (Request $request, Closure $next) {
             if (Auth::guard('web')->check() || Auth::guard('admin')->check()) {
@@ -140,7 +124,7 @@ class PaymentController extends Controller
                 //API 1 (access_token )
                 $headers = [
                     'Content-Type' => 'application/JSON',
-                    // 'Authorization' =>  $this->spg_auth,
+                    'Authorization' =>  $this->spg_auth,
                 ];
                 $body_data = '{"AccessUser":
                           {"userName": "' . $this->spg_access_username . '",

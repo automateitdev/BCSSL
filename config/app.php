@@ -20,6 +20,9 @@ return [
     'spg_username' => env('SPG_USERNAME', ''),
     'spg_password' => env('SPG_PASSWORD', ''),
     'spg_account' => env('SPG_ACCOUNT', ''),
+    'spg_auth' => env('SPG_AUTH', ''),
+    'spg_base_url' => env('SPG_BASE_URL', ''),
+    'spg_redirect_url' => env('SPG_REDIRECT_URL', ''),
 
     /*
     |--------------------------------------------------------------------------
