@@ -85,12 +85,12 @@ class PaymentController extends Controller
         try {
             DB::beginTransaction();
             //get member fee assgin data
-            $feeAssign = FeeAssign::find($data['fee_assign_id']);
+            $feeAssigns = FeeAssign::find($data['fee_assign_id']);
 
-            dd($feeAssign, $data['fee_assign_id']);
+            // dd($feeAssign, $data['fee_assign_id']);
 
-            $data['fine_amount'] = !is_null($feeAssign) ? $feeAssign->whereNotNull('fine_amount')->sum('fine_amount') : 0;
-            $data['payable_amount'] = !is_null($feeAssign) ? $feeAssign->whereNotNull('amount')->sum('amount') : 0;
+            $data['fine_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0;
+            $data['payable_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('amount')->sum('amount') : 0;
             $data['total_amount'] =  $data['fine_amount'] + $data['payable_amount'];
 
 
@@ -130,8 +130,8 @@ class PaymentController extends Controller
                 ];
 
                 $applicantData = [
-                    'name' => $feeAssign->user?->name ?? null,
-                    'contact' => $feeAssign->user?->mobile ?? "00000000000",
+                    'name' => $user?->name ?? null,
+                    'contact' => $user?->mobile ?? "00000000000",
                 ];
 
                 $gatewayDetails = [
@@ -238,7 +238,7 @@ class PaymentController extends Controller
                 $payment_infos = PaymentInfo::create($paymentData);
 
                 if (!is_null($payment_infos)) {
-                    // foreach ($feeAssigns as $feeAssign) {
+                    foreach ($feeAssigns as $feeAssign) {
                     PaymentInfoItem::create([
                             'payment_info_id' => $payment_infos->id,
                             'fee_assign_id' => $feeAssign->id,
@@ -251,7 +251,7 @@ class PaymentController extends Controller
                         $feeAssign->update([
                             'status' => FeeAssign::STATUS_REQUEST
                         ]);
-                    // }
+                    }
 
                     $user->paymentCreate()->create([
                         'payment_info_id' => $payment_infos->id
