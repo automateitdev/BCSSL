@@ -107,8 +107,8 @@ class SpgService
             }
 
             // Mark invoice as pending
-            $invoiceData->payment_state = PaymentService::INVOICE_STATUS['Pending'];
-            $invoiceData->save();
+            // $invoiceData->payment_state = PaymentService::INVOICE_STATUS['Pending'];
+            // $invoiceData->save();
 
             // Successful response
             return [
