@@ -31,17 +31,18 @@ class SpgService
     {
         Log::channel('payflex_log')->info('SPG payment initiated for invoice: ' . $invoiceData->invoice);
 
-        try {
-            $datePart = substr($invoiceData->invoice, -12); // last 12 chars should be date in ymdHis
-            $invoiceDate = Carbon::createFromFormat('ymdHis', $datePart)->format('Y-m-d');
-        } catch (\Exception $e) {
-            Log::channel('payflex_log')->error("Invoice Date format error: {$e->getMessage()}");
-            $invoiceDate = $invoiceData->created_at->format('Y-m-d'); // fallback
-        }
+        // try {
+        //     $datePart = substr($invoiceData['invoiceD'], -12); // last 12 chars should be date in ymdHis
+        //     $invoiceDate = Carbon::createFromFormat('ymdHis', $datePart)->format('Y-m-d');
+        // } catch (\Exception $e) {
+        //     Log::channel('payflex_log')->error("Invoice Date format error: {$e->getMessage()}");
+        //     $invoiceDate = $invoiceData->created_at->format('Y-m-d'); // fallback
+        // }
 
-        $applicantContact = $applicantData?->student?->guardianDetails?->guardian_mobile
-            ?? $applicantData?->student_mobile
-            ?? '00000000000';
+        $invoiceDate = $invoiceData['invoiceDate'];
+        $invoice = $invoiceData['invoice'];
+        $applicantName = $applicantData['name'] ?? null;
+        $applicantContact = $applicantData['contact'] ?? '00000000000';
 
         // Keep only digits
         $applicantContact = preg_replace('/\D/', '', $applicantContact ?? '');
@@ -51,9 +52,6 @@ class SpgService
             $applicantContact = str_repeat('0', 11); // fallback: 11 zeros
         }
 
-        $applicantName = $applicantData?->student?->studentDetails?->student_name_english
-            ?? $applicantData?->student_name_english
-            ?? null;
 
         // Validation checks
         if (empty($applicantContact)) {
@@ -77,7 +75,7 @@ class SpgService
                 'pay_method'       => PaymentService::PAYMETHOD['sonali'],
                 'spg_user'         => $authConfig['spg_user'],
                 'spg_password'     => $authConfig['spg_password'],
-                'invoice'          => $invoiceData->invoice,
+                'invoice'          => $invoice,
                 'invoice_date'     => $invoiceDate,
                 'amount'           => $totalAmount,
                 'applicantContact' => $applicantContact,

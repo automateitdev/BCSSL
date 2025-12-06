@@ -1,10 +1,7 @@
 <?php
-
 namespace App\Http\Controllers\Admin\FeesManagement;
 
 use GuzzleHttp\Client as GuzzleClient;
-use PDF;
-use Auth;
 use Carbon\Carbon;
 use App\Models\User;
 use NumberFormatter;
@@ -20,8 +17,10 @@ use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Requests\Admin\PaymentCreateRequest;
 use App\Jobs\UpdateFeeLedgerTracesJob;
 use App\Services\PaymentService;
+use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Closure;
+use Illuminate\Support\Facades\Auth;
 
 class PaymentController extends Controller
 {
@@ -594,7 +593,7 @@ class PaymentController extends Controller
         $qrcode = base64_encode(QrCode::format('png')->generate($text));
         //  dd($qrcode);
 
-        $pdf = PDF::loadView('pages.admin.pdf.invoices.invoice', ['text' => $text, 'paymentInfo' => $paymentInfo, 'total_amount_num_to_sensts' => $total_amount_num_to_sensts, 'qrcode' => $qrcode]);
+        $pdf = Pdf::loadView('pages.admin.pdf.invoices.invoice', ['text' => $text, 'paymentInfo' => $paymentInfo, 'total_amount_num_to_sensts' => $total_amount_num_to_sensts, 'qrcode' => $qrcode]);
         return $pdf->download($paymentInfo->invoice_no . '.pdf');
 
         // return view('pages.admin.pdf.invoices.invoice', compact('text','paymentInfo','total_amount_num_to_sensts','qrcode'));
