@@ -29,7 +29,6 @@ class SpgService
 
     public function createPayment($totalAmount, $disbursements, $invoiceData, $applicantData, $gatewayDetails): array
     {
-        dd($invoiceData['invoice']);
         Log::channel('payflex_log')->info('SPG payment initiated for invoice: ' . $invoiceData['invoice']);
 
         // try {

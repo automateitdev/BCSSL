@@ -124,7 +124,7 @@ class PaymentController extends Controller
                 // dd(session()->get('online_payment'));
 
                 $invoiceData = [
-                    'inovice' => $unique_invoice,
+                    'invoice' => $unique_invoice,
                     'invoiceDate' => $invoiceDate,
                 ];
 
