@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Http\Controllers\Admin\FeesManagement;
 
 use GuzzleHttp\Client as GuzzleClient;
@@ -146,12 +147,13 @@ class PaymentController extends Controller
                     'spg_redirect_url' => $this->spg_redirect_url
                 ];
 
+                $accounts[] =   [
+                    'crAccount' => $this->spg_ar_account,
+                    'crAmount' => (float)$data['total_amount']
+                ];
 
                 $disbursements = [
-                    'accounts' => [
-                        'crAccount' => $this->spg_ar_account,
-                        'crAmount' => (float)$data['total_amount']
-                    ]
+                    'accounts' => $accounts
                 ];
 
                 Log::channel('pay_flex')->info('disbursements: ', [$disbursements]);
@@ -252,7 +254,7 @@ class PaymentController extends Controller
 
                 if (!is_null($payment_infos)) {
                     foreach ($feeAssigns as $feeAssign) {
-                    PaymentInfoItem::create([
+                        PaymentInfoItem::create([
                             'payment_info_id' => $payment_infos->id,
                             'fee_assign_id' => $feeAssign->id,
                             'fee_assign_id' => $feeAssign->id,
