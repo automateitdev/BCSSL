@@ -117,7 +117,7 @@ class SpgService
                 'message'     => $responseData['message'] ?? 'Payment request created successfully',
             ];
         } catch (\Exception $e) {
-            Log::channel('payflex_log')->error('Payment initiation exception: ' . [
+            Log::channel('payflex_log')->error('Payment initiation exception: ', [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
