@@ -146,7 +146,7 @@ class PaymentController extends Controller
                 $disbursements = [
                     'accounts' => [
                         'crAccount' => $this->spg_ar_account,
-                        'crAmount' => $data['total_amount']
+                        'crAmount' => (float)$data['total_amount']
                     ]
                 ];
 
