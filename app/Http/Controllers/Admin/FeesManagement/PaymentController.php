@@ -19,6 +19,7 @@ use App\Services\Utils\FileUploadService;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Requests\Admin\PaymentCreateRequest;
 use App\Jobs\UpdateFeeLedgerTracesJob;
+use App\Services\PaymentService;
 use Illuminate\Support\Facades\Log;
 use Closure;
 
@@ -32,7 +33,8 @@ class PaymentController extends Controller
     public $spg_base_url_api;
     public $spg_auth;
     public $spg_redirect_url;
-    public function __construct(FileUploadService $fileUploadService)
+    protected $paymentService;
+    public function __construct(FileUploadService $fileUploadService, PaymentService $paymentService)
     {
         $this->fileUploadService = $fileUploadService;
         $this->spg_access_username = config('app.spg_username');
@@ -41,6 +43,7 @@ class PaymentController extends Controller
         $this->spg_auth = config('app.spg_auth');
         $this->spg_base_url_api = config('app.spg_base_url');
         $this->spg_redirect_url = config('app.spg_redirect_url');
+        $this->paymentService = $paymentService;
 
         $this->middleware(function (Request $request, Closure $next) {
             if (Auth::guard('web')->check() || Auth::guard('admin')->check()) {
@@ -89,6 +92,8 @@ class PaymentController extends Controller
             $data['fine_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0;
             $data['payable_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('amount')->sum('amount') : 0;
             $data['total_amount'] =  $data['fine_amount'] + $data['payable_amount'];
+
+
             // dd($data);
             $document_files = [];
             // dd($data['document_files']);
@@ -105,13 +110,13 @@ class PaymentController extends Controller
             // }
 
             $now = Carbon::now();
+            $invoiceDate = $now->format('Y-m-d');
+
             $unique_code = $now->format('ymdHis');
             $unique_invoice = 'INV' . $user->id . $unique_code;
             $data['invoice_no'] = strtoupper($unique_invoice);
-            // $data['invoice_no']= 'INV'.invoiceNoGenerate();
 
             $data['payment_date'] = Carbon::now()->format('Y-m-d');
-
 
             if (isset($data['payment_type']) && $data['payment_type'] == PaymentInfo::PAYMENT_TYPE_ONLINE) {
                 $data['ladger_id'] = 1;
@@ -119,67 +124,93 @@ class PaymentController extends Controller
                 session(['online_payment' => $data]);
                 // dd(session()->get('online_payment'));
 
-                //-------------------
-                $client = new GuzzleClient(array('base_uri' => $this->spg_base_url_api, 'curl' => array(CURLOPT_SSL_VERIFYPEER => false,),));
-                //API 1 (access_token )
-                $headers = [
-                    'Content-Type' => 'application/JSON',
-                    'Authorization' =>  $this->spg_auth,
+                $invoiceData = [
+                    'inovice' => $unique_invoice,
+                    'invoiceDate' => $invoiceDate,
                 ];
-                $body_data = '{"AccessUser":
-                          {"userName": "' . $this->spg_access_username . '",
-                          "password": "' . $this->spg_access_password . '"
-                          },
-                          "invoiceNo":"' . $data['invoice_no'] . '",
-                          "amount":"' . $data['total_amount'] . '",
-                          "invoiceDate":"' .  $data['payment_date'] . '",
-                          "accounts":[{"crAccount":"' . $this->spg_ar_account . '","crAmount":' . $data['total_amount'] .
-                    '}]}';
 
-                $res = $client->request(
-                    'POST',
-                    'api/v2/SpgService/GetAccessToken',
-                    ['headers' => $headers, 'body' => $body_data]
-                );
-                $token = json_decode($res->getBody(), true);
-                // dd('access_token',$body_data, $res, $token);
-                //API 1 end
-                //(API -II) session_token
+                $applicantData = [
+                    'name' => $feeAssigns->user->name,
+                    'contact' => $feeAssigns?->user?->mobile ?? "00000000000",
+                ];
 
-                $client = new GuzzleClient(array('base_uri' => $this->spg_base_url_api, 'curl' => array(CURLOPT_SSL_VERIFYPEER => false,),));
-                $data_two =
-                    '{
-                        "authentication":{
-                            "apiAccessUserId": "' . $this->spg_access_username . '",
-                            "apiAccessToken": "' . $token['access_token'] . '"
-                        },
-                        "referenceInfo": {
-                            "InvoiceNo": "' . $data['invoice_no'] . '",
-                            "invoiceDate": "' . $data['payment_date'] . '",
-                            "returnUrl": "' . route('admin.fees.payment.returnUrl') . '",
-                            "totalAmount": "' . $data['total_amount'] . '",
-                            "applicentName": "' . $user->name . '",
-                            "applicentContactNo": "010000000",
-                            "extraRefNo": "2132"
-                        },
+                $gatewayDetails = [
+                    'spg_user'     => $this->spg_access_username,
+                    'spg_password' => $this->spg_access_password,
+                    'spg_account'  => $this->spg_ar_account,
+                    'spg_auth'     => $this->spg_auth,
+                    'spg_base_url' => $this->spg_base_url_api,
+                    'spg_redirect_url' => $this->spg_redirect_url
+                ];
 
-                        "creditInformations":
-                        [
-                            {
-                                "slno": "1",
-                                "crAccount": "' . $this->spg_ar_account . '",
-                                "crAmount": "' . $data['total_amount'] . '",
-                                "tranMode": "TRN"
-                            }
-                        ]
-                    }';
+                $initResponse = $this->paymentService->initiateGatewayPayment('SPG', $gatewayDetails, $applicantData, $data['total_amount'], [], $invoiceData);
+
+                Log::channel('pay_flex')->info('Payment init response: ', ['response' => $initResponse]);
+
+
+                // //-------------------
+                // $client = new GuzzleClient(array('base_uri' => $this->spg_base_url_api, 'curl' => array(CURLOPT_SSL_VERIFYPEER => false,),));
+                // //API 1 (access_token )
+                // $headers = [
+                //     'Content-Type' => 'application/JSON',
+                //     'Authorization' =>  $this->spg_auth,
+                // ];
+                // $body_data = '{"AccessUser":
+                //           {"userName": "' . $this->spg_access_username . '",
+                //           "password": "' . $this->spg_access_password . '"
+                //           },
+                //           "invoiceNo":"' . $data['invoice_no'] . '",
+                //           "amount":"' . $data['total_amount'] . '",
+                //           "invoiceDate":"' .  $data['payment_date'] . '",
+                //           "accounts":[{"crAccount":"' . $this->spg_ar_account . '","crAmount":' . $data['total_amount'] .
+                //     '}]}';
+
+
+
+                // $res = $client->request(
+                //     'POST',
+                //     'api/v2/SpgService/GetAccessToken',
+                //     ['headers' => $headers, 'body' => $body_data]
+                // );
+                // $token = json_decode($res->getBody(), true);
+                // // dd('access_token',$body_data, $res, $token);
+                // //API 1 end
+                // //(API -II) session_token
+
+                // $client = new GuzzleClient(array('base_uri' => $this->spg_base_url_api, 'curl' => array(CURLOPT_SSL_VERIFYPEER => false,),));
+                // $data_two =
+                //     '{
+                //         "authentication":{
+                //             "apiAccessUserId": "' . $this->spg_access_username . '",
+                //             "apiAccessToken": "' . $token['access_token'] . '"
+                //         },
+                //         "referenceInfo": {
+                //             "InvoiceNo": "' . $data['invoice_no'] . '",
+                //             "invoiceDate": "' . $data['payment_date'] . '",
+                //             "returnUrl": "' . route('admin.fees.payment.returnUrl') . '",
+                //             "totalAmount": "' . $data['total_amount'] . '",
+                //             "applicentName": "' . $user->name . '",
+                //             "applicentContactNo": "010000000",
+                //             "extraRefNo": "2132"
+                //         },
+
+                //         "creditInformations":
+                //         [
+                //             {
+                //                 "slno": "1",
+                //                 "crAccount": "' . $this->spg_ar_account . '",
+                //                 "crAmount": "' . $data['total_amount'] . '",
+                //                 "tranMode": "TRN"
+                //             }
+                //         ]
+                //     }';
                 // dd('data_two', $body_data,$data_two);
-                $res_two = $client->request(
-                    'POST',
-                    'api/v2/SpgService/CreatePaymentRequest',
-                    ['headers' => $headers, 'body' => $data_two]
-                );
-                $sessiontoken = json_decode($res_two->getBody(), true);
+                // $res_two = $client->request(
+                //     'POST',
+                //     'api/v2/SpgService/CreatePaymentRequest',
+                //     ['headers' => $headers, 'body' => $data_two]
+                // );
+                // $sessiontoken = json_decode($initResponse->getBody(), true);
                 // $redirect_to = $this->spg_redirect_url.'SpgLanding/SpgLanding/'.$sessiontoken['session_token'];
                 // https://spg.sblesheba.com:6313/SpgLanding/SpgLanding/{session_token}
 
@@ -188,7 +219,7 @@ class PaymentController extends Controller
                     'layouts.member.spg_paymentform',
                     with([
                         'spg_redirect_url' => $this->spg_redirect_url,
-                        'sessiontoken' => $sessiontoken
+                        'sessiontoken' => $initResponse
                     ])
                 );
 
@@ -238,6 +269,134 @@ class PaymentController extends Controller
             something_wrong_flash($e->getMessage());
             dd($e);
             //throw $th;
+        }
+    }
+
+
+
+    public function createPayment(float $totalAmount, array $applicantData, array $invoiceData): array
+    {
+        Log::channel('payflex_log')->info('SPG payment initiated for invoice: ' . $invoiceData['invoice']);
+
+        // try {
+        //     $datePart = substr($invoice, -12); // last 12 chars should be date in ymdHis
+        //     $invoiceDate = Carbon::createFromFormat('ymdHis', $datePart)->format('Y-m-d');
+        // } catch (\Exception $e) {
+        //     Log::channel('payflex_log')->error("Invoice Date format error: {$e->getMessage()}");
+        //     $invoiceDate = $invoiceData->created_at->format('Y-m-d'); // fallback
+        // }
+
+        $invoiceDate = $invoiceData['invoiceDate'] ?? Carbon::now()->format('Y-m-d'); // fallback
+
+        $applicantContact = $applicantData['contact']
+            ?? '00000000000';
+
+        // Keep only digits
+        $applicantContact = preg_replace('/\D/', '', $applicantContact ?? '');
+
+        // Check length (8–15 digits)
+        if (strlen($applicantContact) < 8 || strlen($applicantContact) > 15) {
+            $applicantContact = str_repeat('0', 11); // fallback: 11 zeros
+        }
+
+        $applicantName = $applicantData['name'] ?? null;
+
+        // Validation checks
+        if (empty($applicantName)) {
+            Log::channel('payflex_log')->error("Applicant Name can not be empty!");
+            something_wrong_flash("Applicant Name can not be empty!");
+        }
+        if (empty($applicantContact)) {
+            Log::channel('payflex_log')->error("Applicant Contact can not be empty!");
+            something_wrong_flash("Applicant Contact can not be empty!");
+        }
+
+        // Call external payment API
+        try {
+            // TODO:: ADD PROPER LOGIC TO CONTROL PAID AND FREE SPG ACCOUNT AND DISBURSE ///
+
+            // $instDetail = InstituteDetail::find($gatewayDetails->institute_details_id);
+
+            // if (!$instDetail) {
+            //     return [
+            //         'status' => 'error',
+            //         'errors' => ApiResponseHelper::formatErrors(
+            //             ApiResponseHelper::INVALID_REQUEST,
+            //             [$responseData['message'] ?? 'Payment initiation failed']
+            //         ),
+            //         'message' => 'Payment initiation failed',
+            //     ];
+            // }
+
+            // $authConfig = $instDetail->is_gateway_fee
+            //     ? config('spg.spg_paid_auth')
+            //     : config('spg.spg_default_auth');
+
+            ////////////////////////////////////////////////////////////////////////////////
+
+            $response = $this->flexPayClient->post($this->flexPayURL . '/api/payment/init', [
+                'pay_method'       => PaymentService::PAYMETHOD['sonali'],
+                'spg_user'         => $authConfig['spg_user'],
+                'spg_password'     => $authConfig['spg_password'],
+                'invoice'          => $invoiceData->invoice,
+                'invoice_date'     => $invoiceDate,
+                'amount'           => $totalAmount,
+                'applicantContact' => $applicantContact,
+                'applicantName'    => $applicantName,
+                'disbursement'     => $disbursements['accounts'] ?? [],
+            ]);
+            $responseData = $response->json();
+            Log::channel('spg_log')->info("Response from payment init:", ['response' => $responseData]);
+
+            if (!$response->successful()) {
+                Log::channel('payflex_log')->error('Payment init failed', [
+                    'status' => $response->status(),
+                    'body'   => $response->body(),
+                ]);
+
+                // Sometimes backend still says success inside `details`
+                if (isset($responseData['details']['success']) && $responseData['details']['success'] === true) {
+                    return [
+                        'status'      => 'success',
+                        'token'       => $responseData['details']['token'] ?? null,
+                        'payment_url' => $responseData['details']['payment_url'] ?? null,
+                        'message'     => $responseData['details']['message'] ?? 'Payment request created successfully',
+                        'errors'      => [],
+                    ];
+                }
+
+                return [
+                    'status' => 'error',
+                    'errors' => ApiResponseHelper::formatErrors(
+                        ApiResponseHelper::INVALID_REQUEST,
+                        [$responseData['message'] ?? 'Payment initiation failed']
+                    ),
+                    'message' => 'Payment initiation failed',
+                ];
+            }
+
+            // Mark invoice as pending
+            $invoiceData->payment_state = PaymentService::INVOICE_STATUS['Pending'];
+            $invoiceData->save();
+
+            // Successful response
+            return [
+                'status'      => 'success',
+                'token'       => $responseData['Token'] ?? null,
+                'payment_url' => $responseData['RedirectToGateway'] ?? null,
+                'message'     => $responseData['message'] ?? 'Payment request created successfully',
+            ];
+        } catch (\Exception $e) {
+            Log::channel('payflex_log')->error('Payment initiation exception: ' . $e->getMessage());
+
+            return [
+                'status' => 'error',
+                'errors' => ApiResponseHelper::formatErrors(
+                    ApiResponseHelper::INVALID_REQUEST,
+                    ['Payment initiation failed']
+                ),
+                'message' => 'Payment initiation failed',
+            ];
         }
     }
 

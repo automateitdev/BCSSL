@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Session;
 use App\Services\Utils\FileUploadService;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 
 class MemberAuthController extends Controller
@@ -113,6 +114,7 @@ class MemberAuthController extends Controller
     public function memberRegister(Request $request)
     {
         // return $request->all();
+        // Log::info($request->all());
         // dd(Auth::guard('admin')->check());
         $applicant_info_data = collect($request->applicant_info)->toArray();
         $nominee_info_data = collect($request->nominee_info)->toArray();
@@ -190,9 +192,10 @@ class MemberAuthController extends Controller
         } catch (\Exception $th) {
             DB::rollBack();
             // dd($th->getMessage());
+            Log::error('Member Registration Error: ' . ['error' => $th->getMessage(), 'trace' => $th->getTraceAsString()]);
             return response()->json([
                 'status' => 'error',
-                'error' => $th->getMessage()
+                'error' => $th->getMessage(),
             ]);
         }
     }
