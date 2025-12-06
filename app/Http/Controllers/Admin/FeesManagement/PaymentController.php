@@ -147,6 +147,7 @@ class PaymentController extends Controller
 
                 Log::channel('pay_flex')->info('Payment init response: ', ['response' => $initResponse]);
 
+                return response()->json($initResponse);
 
                 // //-------------------
                 // $client = new GuzzleClient(array('base_uri' => $this->spg_base_url_api, 'curl' => array(CURLOPT_SSL_VERIFYPEER => false,),));
@@ -215,13 +216,13 @@ class PaymentController extends Controller
                 // https://spg.sblesheba.com:6313/SpgLanding/SpgLanding/{session_token}
 
                 // return redirect()->to($redirect_to);
-                return view(
-                    'layouts.member.spg_paymentform',
-                    with([
-                        'spg_redirect_url' => $this->spg_redirect_url,
-                        'sessiontoken' => $initResponse
-                    ])
-                );
+                // return view(
+                //     'layouts.member.spg_paymentform',
+                //     with([
+                //         'spg_redirect_url' => $this->spg_redirect_url,
+                //         'sessiontoken' => $initResponse
+                //     ])
+                // );
 
                 //Post Transactional Data (API -II) end
                 // dd('sessiontoken',$res_two,$sessiontoken, $redirect_to);
