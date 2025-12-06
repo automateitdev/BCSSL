@@ -134,6 +134,13 @@ return [
             'level' => 'info', // Set the appropriate log level
             'days' => 14,
         ],
+
+        'spg_log' => [
+            'driver' => 'daily', // You can choose a different driver based on your needs
+            'path' => storage_path('logs/payflex.log'), // Adjust the log file path
+            'level' => 'info', // Set the appropriate log level
+            'days' => 14,
+        ],
     ],
 
 ];
