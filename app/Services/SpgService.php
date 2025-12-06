@@ -29,7 +29,7 @@ class SpgService
 
     public function createPayment($totalAmount, $disbursements, $invoiceData, $applicantData, $gatewayDetails): array
     {
-        Log::channel('payflex_log')->info('SPG payment initiated for invoice: ' . $invoiceData->invoice);
+        Log::channel('payflex_log')->info('SPG payment initiated for invoice: ' . $invoiceData['invoice']);
 
         // try {
         //     $datePart = substr($invoiceData['invoiceD'], -12); // last 12 chars should be date in ymdHis
