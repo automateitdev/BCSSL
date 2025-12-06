@@ -142,7 +142,16 @@ class PaymentController extends Controller
                     'spg_redirect_url' => $this->spg_redirect_url
                 ];
 
-                $initResponse = $this->paymentService->initiateGatewayPayment('SPG', $gatewayDetails, $applicantData, $data['total_amount'], [], $invoiceData);
+
+                $disbursements = [
+                    'accounts' => [
+                        'crAccount' => $this->spg_ar_account,
+                        'crAmount' => $data['total_amount']
+                    ]
+                ];
+
+
+                $initResponse = $this->paymentService->initiateGatewayPayment('SPG', $gatewayDetails, $applicantData, $data['total_amount'], $disbursements, $invoiceData);
 
                 Log::channel('pay_flex')->info('Payment init response: ', ['response' => $initResponse]);
 
