@@ -96,6 +96,7 @@ class PaymentService
      */
     public function initiateGatewayPayment($gateway, $gatewayDetails, $applicantData, $totalAmount, $disbursements = [], $invoiceData = [])
     {
+        dd($invoiceData);
         switch ($gateway) {
             case self::PAYMETHOD['sonali']:
                 return $this->getSpgService()->createPayment($totalAmount, $disbursements, $invoiceData, $applicantData, $gatewayDetails);
