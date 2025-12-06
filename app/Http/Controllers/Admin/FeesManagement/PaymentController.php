@@ -85,7 +85,7 @@ class PaymentController extends Controller
         try {
             DB::beginTransaction();
             //get member fee assgin data
-            $feeAssign = FeeAssign::find($data['fee_assign_id'])->with('user');
+            $feeAssign = FeeAssign::find($data['fee_assign_id']);
 
             // dd($feeAssign, $data['fee_assign_id']);
 
