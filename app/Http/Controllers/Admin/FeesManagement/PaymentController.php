@@ -85,12 +85,12 @@ class PaymentController extends Controller
         try {
             DB::beginTransaction();
             //get member fee assgin data
-            $feeAssigns = FeeAssign::find($data['fee_assign_id']);
+            $feeAssign = FeeAssign::find($data['fee_assign_id'])->with('user');
 
-            // dd($feeAssigns, $data['fee_assign_id']);
+            // dd($feeAssign, $data['fee_assign_id']);
 
-            $data['fine_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0;
-            $data['payable_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('amount')->sum('amount') : 0;
+            $data['fine_amount'] = !is_null($feeAssign) ? $feeAssign->whereNotNull('fine_amount')->sum('fine_amount') : 0;
+            $data['payable_amount'] = !is_null($feeAssign) ? $feeAssign->whereNotNull('amount')->sum('amount') : 0;
             $data['total_amount'] =  $data['fine_amount'] + $data['payable_amount'];
 
 
@@ -130,8 +130,8 @@ class PaymentController extends Controller
                 ];
 
                 $applicantData = [
-                    'name' => $feeAssigns->user->name,
-                    'contact' => $feeAssigns?->user?->mobile ?? "00000000000",
+                    'name' => $feeAssign->user?->name ?? null,
+                    'contact' => $feeAssign->user?->mobile ?? "00000000000",
                 ];
 
                 $gatewayDetails = [
@@ -237,8 +237,8 @@ class PaymentController extends Controller
                 $payment_infos = PaymentInfo::create($paymentData);
 
                 if (!is_null($payment_infos)) {
-                    foreach ($feeAssigns as $feeAssign) {
-                        PaymentInfoItem::create([
+                    // foreach ($feeAssigns as $feeAssign) {
+                    PaymentInfoItem::create([
                             'payment_info_id' => $payment_infos->id,
                             'fee_assign_id' => $feeAssign->id,
                             'fee_assign_id' => $feeAssign->id,
@@ -250,7 +250,7 @@ class PaymentController extends Controller
                         $feeAssign->update([
                             'status' => FeeAssign::STATUS_REQUEST
                         ]);
-                    }
+                    // }
 
                     $user->paymentCreate()->create([
                         'payment_info_id' => $payment_infos->id
@@ -265,138 +265,12 @@ class PaymentController extends Controller
                 return redirect()->back();
             }
         } catch (\Exception $e) {
+
             DB::rollBack();
+            Log::channel('payflex_log')->error($e->getMessage());
             something_wrong_flash($e->getMessage());
             dd($e);
             //throw $th;
-        }
-    }
-
-
-
-    public function createPayment(float $totalAmount, array $applicantData, array $invoiceData): array
-    {
-        Log::channel('payflex_log')->info('SPG payment initiated for invoice: ' . $invoiceData['invoice']);
-
-        // try {
-        //     $datePart = substr($invoice, -12); // last 12 chars should be date in ymdHis
-        //     $invoiceDate = Carbon::createFromFormat('ymdHis', $datePart)->format('Y-m-d');
-        // } catch (\Exception $e) {
-        //     Log::channel('payflex_log')->error("Invoice Date format error: {$e->getMessage()}");
-        //     $invoiceDate = $invoiceData->created_at->format('Y-m-d'); // fallback
-        // }
-
-        $invoiceDate = $invoiceData['invoiceDate'] ?? Carbon::now()->format('Y-m-d'); // fallback
-
-        $applicantContact = $applicantData['contact']
-            ?? '00000000000';
-
-        // Keep only digits
-        $applicantContact = preg_replace('/\D/', '', $applicantContact ?? '');
-
-        // Check length (8–15 digits)
-        if (strlen($applicantContact) < 8 || strlen($applicantContact) > 15) {
-            $applicantContact = str_repeat('0', 11); // fallback: 11 zeros
-        }
-
-        $applicantName = $applicantData['name'] ?? null;
-
-        // Validation checks
-        if (empty($applicantName)) {
-            Log::channel('payflex_log')->error("Applicant Name can not be empty!");
-            something_wrong_flash("Applicant Name can not be empty!");
-        }
-        if (empty($applicantContact)) {
-            Log::channel('payflex_log')->error("Applicant Contact can not be empty!");
-            something_wrong_flash("Applicant Contact can not be empty!");
-        }
-
-        // Call external payment API
-        try {
-            // TODO:: ADD PROPER LOGIC TO CONTROL PAID AND FREE SPG ACCOUNT AND DISBURSE ///
-
-            // $instDetail = InstituteDetail::find($gatewayDetails->institute_details_id);
-
-            // if (!$instDetail) {
-            //     return [
-            //         'status' => 'error',
-            //         'errors' => ApiResponseHelper::formatErrors(
-            //             ApiResponseHelper::INVALID_REQUEST,
-            //             [$responseData['message'] ?? 'Payment initiation failed']
-            //         ),
-            //         'message' => 'Payment initiation failed',
-            //     ];
-            // }
-
-            // $authConfig = $instDetail->is_gateway_fee
-            //     ? config('spg.spg_paid_auth')
-            //     : config('spg.spg_default_auth');
-
-            ////////////////////////////////////////////////////////////////////////////////
-
-            $response = $this->flexPayClient->post($this->flexPayURL . '/api/payment/init', [
-                'pay_method'       => PaymentService::PAYMETHOD['sonali'],
-                'spg_user'         => $authConfig['spg_user'],
-                'spg_password'     => $authConfig['spg_password'],
-                'invoice'          => $invoiceData->invoice,
-                'invoice_date'     => $invoiceDate,
-                'amount'           => $totalAmount,
-                'applicantContact' => $applicantContact,
-                'applicantName'    => $applicantName,
-                'disbursement'     => $disbursements['accounts'] ?? [],
-            ]);
-            $responseData = $response->json();
-            Log::channel('spg_log')->info("Response from payment init:", ['response' => $responseData]);
-
-            if (!$response->successful()) {
-                Log::channel('payflex_log')->error('Payment init failed', [
-                    'status' => $response->status(),
-                    'body'   => $response->body(),
-                ]);
-
-                // Sometimes backend still says success inside `details`
-                if (isset($responseData['details']['success']) && $responseData['details']['success'] === true) {
-                    return [
-                        'status'      => 'success',
-                        'token'       => $responseData['details']['token'] ?? null,
-                        'payment_url' => $responseData['details']['payment_url'] ?? null,
-                        'message'     => $responseData['details']['message'] ?? 'Payment request created successfully',
-                        'errors'      => [],
-                    ];
-                }
-
-                return [
-                    'status' => 'error',
-                    'errors' => ApiResponseHelper::formatErrors(
-                        ApiResponseHelper::INVALID_REQUEST,
-                        [$responseData['message'] ?? 'Payment initiation failed']
-                    ),
-                    'message' => 'Payment initiation failed',
-                ];
-            }
-
-            // Mark invoice as pending
-            $invoiceData->payment_state = PaymentService::INVOICE_STATUS['Pending'];
-            $invoiceData->save();
-
-            // Successful response
-            return [
-                'status'      => 'success',
-                'token'       => $responseData['Token'] ?? null,
-                'payment_url' => $responseData['RedirectToGateway'] ?? null,
-                'message'     => $responseData['message'] ?? 'Payment request created successfully',
-            ];
-        } catch (\Exception $e) {
-            Log::channel('payflex_log')->error('Payment initiation exception: ' . $e->getMessage());
-
-            return [
-                'status' => 'error',
-                'errors' => ApiResponseHelper::formatErrors(
-                    ApiResponseHelper::INVALID_REQUEST,
-                    ['Payment initiation failed']
-                ),
-                'message' => 'Payment initiation failed',
-            ];
         }
     }
 
