@@ -74,10 +74,14 @@ class PaymentController extends Controller
             $user = User::find(Auth::guard('admin')->user()->id);
             $data['status'] = PaymentInfo::STATUS_PENDING;
             $data['created_by'] = $user->id;
+
+            $applicantContact = $user->mobile;
         } else {
             $user = Member::find(Auth::guard('web')->user()->id);
             $data['status'] = PaymentInfo::STATUS_PENDING;
             $data['created_by'] = $user->id;
+
+            $applicantContact = $user->formatted_number;
         }
 
 
@@ -130,7 +134,7 @@ class PaymentController extends Controller
 
                 $applicantData = [
                     'name' => $user?->name ?? null,
-                    'contact' => $user?->mobile ?? "00000000000",
+                    'contact' => $applicantContact ?? "00000000000",
                 ];
 
                 $gatewayDetails = [
@@ -150,6 +154,7 @@ class PaymentController extends Controller
                     ]
                 ];
 
+                Log::channel('pay_flex')->info('disbursements: ', [$disbursements]);
 
                 $initResponse = $this->paymentService->initiateGatewayPayment('SPG', $gatewayDetails, $applicantData, $data['total_amount'], $disbursements, $invoiceData);
 
