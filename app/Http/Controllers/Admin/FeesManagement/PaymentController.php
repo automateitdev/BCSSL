@@ -87,7 +87,7 @@ class PaymentController extends Controller
             //get member fee assgin data
             $feeAssign = FeeAssign::find($data['fee_assign_id']);
 
-            // dd($feeAssign, $data['fee_assign_id']);
+            dd($feeAssign, $data['fee_assign_id']);
 
             $data['fine_amount'] = !is_null($feeAssign) ? $feeAssign->whereNotNull('fine_amount')->sum('fine_amount') : 0;
             $data['payable_amount'] = !is_null($feeAssign) ? $feeAssign->whereNotNull('amount')->sum('amount') : 0;
