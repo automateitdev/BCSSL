@@ -2,10 +2,8 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\MemberAuthController;
 use App\Http\Controllers\Api\SpgPaymentController;
-use App\Http\Controllers\sms\SmsSettingsController;
-use App\Http\Controllers\Admin\FeesManagement\PaymentController;
+use App\Http\Controllers\PayflexController;
 
 /*
 |--------------------------------------------------------------------------
@@ -25,7 +23,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/DataUpdate', [SpgPaymentController::class, 'dataUpdate']);
 
 // payflex essential routes
-Route::post('/pay-flex/verify', [PaymentController::class, 'handlePayFlexVerification']);
-Route::post('/pay-flex/notify', [PaymentController::class, 'handlePayFlexNotification']);
+Route::post('/pay-flex/verify', [PayflexController::class, 'handlePayFlexVerification'])->name('payFlex.verification');
+Route::post('/pay-flex/notify', [PayflexController::class, 'handlePayFlexNotification'])->name('payFlex.notification');
 
 // Route::post('/member-portal-register', [MemberAuthController::class, 'memberRegister']);
