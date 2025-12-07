@@ -500,7 +500,7 @@ class PaymentController extends Controller
     {
         $paymentStatus = $request->input('status') ?? null;
         $invoice = $request->input('invoice') ?? null;
-        $payInvoice = PaymentRequest::where('invoice_no', $invoice)->first();
+        $payInvoice = PaymentRequest::where('invoice', $invoice)->first();
 
         if ($paymentStatus != 200) {
             something_wrong_flash('Payment attempt canceled/failed');
