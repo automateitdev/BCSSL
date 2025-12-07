@@ -56,6 +56,8 @@ class PayflexController extends Controller
                     throw new \Exception("Member not found (ID: {$paymentRequest->creator_id}) for invoice {$invoice}");
                 }
 
+                $feeAssigns = FeeAssign::whereIn('id', $paymentRequest->fee_assign_ids)->get();
+
                 // Prepare PaymentInfo data
                 $data = [
                     'member_id'        => $user->creator_id,
@@ -73,6 +75,7 @@ class PayflexController extends Controller
                     'invoice_no'       => $invoice,
                     'session_token'    => $verification['Token'] ?? null,
                     'ledger_id'        => 1,
+                    'fine_amount'      => !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0,
                     'status'           => ($statusCode == 200)
                         ? PaymentInfo::STATUS_COMPLETE
                         : PaymentInfo::STATUS_PENDING,
@@ -82,7 +85,7 @@ class PayflexController extends Controller
                 $paymentInfo = PaymentInfo::create($data);
 
                 // Collect fee assigns
-                $feeAssigns = FeeAssign::whereIn('id', $paymentRequest->fee_assign_ids)->get();
+
 
                 // Create PaymentInfoItems
                 foreach ($feeAssigns as $feeAssign) {
