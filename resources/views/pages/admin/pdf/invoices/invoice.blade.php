@@ -73,7 +73,7 @@
                 <td style="    text-align: center;    width: 80%;">
                     <div class="header-section2-inner">
                         <h4>
-                            {{ !is_null(getSetting('name')) ? getSetting('name') : '{{ config('app.title') }}' }}
+                            {{ !is_null(getSetting('name')) ? getSetting('name') : 'Cadre Officers’ Co-operative Society Limited (COCSOL)' }}
                         </h4>
                     </div>
                 </td>
