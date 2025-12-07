@@ -17,6 +17,7 @@ use App\Services\Utils\FileUploadService;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Requests\Admin\PaymentCreateRequest;
 use App\Jobs\UpdateFeeLedgerTracesJob;
+use App\Models\AccountGroup;
 use App\Models\PaymentRequest;
 use App\Services\PaymentService;
 use App\Services\SpgService;
@@ -508,7 +509,15 @@ class PaymentController extends Controller
             record_created_flash('Payment has been done successfully!');
         }
 
-        return view('pages.member.dashboard.member-info');
+        $user = auth()->user();
+        $member = Member::with(['feeAssigns' => function ($query) {
+            $query->with(['fee_setup'])->where('status', FeeAssign::STATUS_DUE);
+        }, 'associatorsInfo:member_id,membershp_number', 'nominee', 'memberProfileUpdate:id,member_id,status', 'paymentInfos', 'memberChoices'])->find($user->id);
+        $assetAccReceiveBy = AccountGroup::with(['Ledgers'])->find([1, 2, 3]);
+        $user_gender = collect(User::USER_GENDER);
+        $user_blood_group = collect(User::USER_BLOOD_GROUP);
+
+        return view('pages.member.dashboard.member-info', compact('member', 'assetAccReceiveBy', 'user_gender', 'user_blood_group'));
 
         // if ($payInvoice) {
         //     $returnUrl = $payInvoice?->instituteDetail?->vendor?->payment_portal ?? null;
