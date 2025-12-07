@@ -325,12 +325,13 @@ class PaymentController extends Controller
                 'message' => 'Pay invoice updated'
             ]);
         } catch (\Throwable $e) {
-            Log::channel('payflex_log')->error("Error in processPayInvoice: " . $e->getMessage(), [
+            Log::channel('payflex_log')->error("Error in processPayInvoice: ", [
+                'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
 
             // something_wrong_flash('An unexpected error occured!');
-            // return response()->json(['errors' => ApiResponseHelper::formatErrors(ApiResponseHelper::SYSTEM_ERROR, [ServerErrorMask::SERVER_ERROR])], 500);
+            return response()->json('Internal server error', 500);
         }
     }
 
