@@ -17,7 +17,9 @@ use App\Services\Utils\FileUploadService;
 use SimpleSoftwareIO\QrCode\Facades\QrCode;
 use App\Http\Requests\Admin\PaymentCreateRequest;
 use App\Jobs\UpdateFeeLedgerTracesJob;
+use App\Models\PaymentRequest;
 use App\Services\PaymentService;
+use App\Services\SpgService;
 use Barryvdh\DomPDF\Facade\Pdf;
 use Illuminate\Support\Facades\Log;
 use Closure;
@@ -34,7 +36,8 @@ class PaymentController extends Controller
     public $spg_auth;
     public $spg_redirect_url;
     protected $paymentService;
-    public function __construct(FileUploadService $fileUploadService, PaymentService $paymentService)
+    protected $spgService;
+    public function __construct(FileUploadService $fileUploadService, PaymentService $paymentService, SpgService $spgService)
     {
         $this->fileUploadService = $fileUploadService;
         $this->spg_access_username = config('app.spg_username');
@@ -44,6 +47,7 @@ class PaymentController extends Controller
         $this->spg_base_url_api = config('app.spg_base_url');
         $this->spg_redirect_url = config('app.spg_redirect_url');
         $this->paymentService = $paymentService;
+        $this->spgService = $spgService;
 
         $this->middleware(function (Request $request, Closure $next) {
             if (Auth::guard('web')->check() || Auth::guard('admin')->check()) {
@@ -123,6 +127,14 @@ class PaymentController extends Controller
             $data['payment_date'] = Carbon::now()->format('Y-m-d');
 
             if (isset($data['payment_type']) && $data['payment_type'] == PaymentInfo::PAYMENT_TYPE_ONLINE) {
+
+                PaymentRequest::create([
+                    'invoice'        => $data['invoice_no'],
+                    'fee_assign_ids' => $request->fee_assign_ids,
+                    'total_amount'   => $data['total_amount'],
+                    'status'         => 'pending',
+                ]);
+
                 $data['ladger_id'] = 1;
                 unset($data['document_files']);
                 session(['online_payment' => $data]);
@@ -162,86 +174,11 @@ class PaymentController extends Controller
 
                 Log::channel('pay_flex')->info('Payment init response: ', ['response' => $initResponse]);
 
-                // return response()->json($initResponse);
-
-                // //-------------------
-                // $client = new GuzzleClient(array('base_uri' => $this->spg_base_url_api, 'curl' => array(CURLOPT_SSL_VERIFYPEER => false,),));
-                // //API 1 (access_token )
-                // $headers = [
-                //     'Content-Type' => 'application/JSON',
-                //     'Authorization' =>  $this->spg_auth,
-                // ];
-                // $body_data = '{"AccessUser":
-                //           {"userName": "' . $this->spg_access_username . '",
-                //           "password": "' . $this->spg_access_password . '"
-                //           },
-                //           "invoiceNo":"' . $data['invoice_no'] . '",
-                //           "amount":"' . $data['total_amount'] . '",
-                //           "invoiceDate":"' .  $data['payment_date'] . '",
-                //           "accounts":[{"crAccount":"' . $this->spg_ar_account . '","crAmount":' . $data['total_amount'] .
-                //     '}]}';
-
-
-
-                // $res = $client->request(
-                //     'POST',
-                //     'api/v2/SpgService/GetAccessToken',
-                //     ['headers' => $headers, 'body' => $body_data]
-                // );
-                // $token = json_decode($res->getBody(), true);
-                // // dd('access_token',$body_data, $res, $token);
-                // //API 1 end
-                // //(API -II) session_token
-
-                // $client = new GuzzleClient(array('base_uri' => $this->spg_base_url_api, 'curl' => array(CURLOPT_SSL_VERIFYPEER => false,),));
-                // $data_two =
-                //     '{
-                //         "authentication":{
-                //             "apiAccessUserId": "' . $this->spg_access_username . '",
-                //             "apiAccessToken": "' . $token['access_token'] . '"
-                //         },
-                //         "referenceInfo": {
-                //             "InvoiceNo": "' . $data['invoice_no'] . '",
-                //             "invoiceDate": "' . $data['payment_date'] . '",
-                //             "returnUrl": "' . route('admin.fees.payment.returnUrl') . '",
-                //             "totalAmount": "' . $data['total_amount'] . '",
-                //             "applicentName": "' . $user->name . '",
-                //             "applicentContactNo": "010000000",
-                //             "extraRefNo": "2132"
-                //         },
-
-                //         "creditInformations":
-                //         [
-                //             {
-                //                 "slno": "1",
-                //                 "crAccount": "' . $this->spg_ar_account . '",
-                //                 "crAmount": "' . $data['total_amount'] . '",
-                //                 "tranMode": "TRN"
-                //             }
-                //         ]
-                //     }';
-                // dd('data_two', $body_data,$data_two);
-                // $res_two = $client->request(
-                //     'POST',
-                //     'api/v2/SpgService/CreatePaymentRequest',
-                //     ['headers' => $headers, 'body' => $data_two]
-                // );
-                // $sessiontoken = json_decode($initResponse->getBody(), true);
-                // $redirect_to = $this->spg_redirect_url.'SpgLanding/SpgLanding/'.$sessiontoken['session_token'];
-                // https://spg.sblesheba.com:6313/SpgLanding/SpgLanding/{session_token}
                 if ($initResponse['status'] == 'success' && !empty($initResponse['payment_url'])) {
                     return redirect()->to($initResponse['payment_url']);
+                } else {
+                    something_wrong_flash('Could not initiate the payment! try later.');
                 }
-                // return view(
-                //     'layouts.member.spg_paymentform',
-                //     with([
-                //         'spg_redirect_url' => $this->spg_redirect_url,
-                //         'sessiontoken' => $initResponse
-                //     ])
-                // );
-
-                //Post Transactional Data (API -II) end
-                // dd('sessiontoken',$res_two,$sessiontoken, $redirect_to);
             } else {
 
                 // dd($data);\
@@ -286,108 +223,107 @@ class PaymentController extends Controller
             DB::rollBack();
             Log::channel('payflex_log')->error($e->getMessage());
             something_wrong_flash($e->getMessage());
-            dd($e);
             //throw $th;
         }
     }
 
-    // public function paymentReturnUrl(Request $request){
+    public function handlePayFlexVerification(Request $request)
+    {
+        $data = $request->all();
+        // Check if PayFlex has provided data
+        if (empty($data['data'])) {
+            return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
+        }
 
-    //     $session_token = $request['session_token'];
-    //     $status = $request['status'];
-    //     // dd($session_token, $status, $request->all());
+        $verification = $data['data']; // Standardized payload from PayFlex
+        $invoice = $verification['InvoiceNo'] ?? null;
+        if (!$invoice) {
+            return response()->json(['status' => 'error', 'message' => 'Invoice missing'], 400);
+        }
 
-    //     $data = session()->get('online_payment');
-    //     if(!is_null($data)){
-    //         $data['session_token'] = $session_token;
-    //     }
+        return $this->processPayInvoice($invoice, $verification);
+    }
 
-    //     if($status == 'success'){
-    //         if (session()->exists('online_payment')) {
-    //             session()->forget('online_payment');
-    //         }
-    //         //Transaction Verification (API-III)
-    //         $client = new GuzzleClient(array('base_uri'=> $this->spg_base_url_api, 'curl' =>array(CURLOPT_SSL_VERIFYPEER => false,),));
-    //           $headers = [
-    //               'Content-Type' => 'application/JSON',
-    //               'Authorization' =>  $this->spg_auth,
-    //               ];
-    //               $body_data = '{"session_Token": "' . $session_token . '"}';
-    //             //   dd('body_data', $body_data);
-    //         $res = $client->request(
-    //             'POST',
-    //             'api/v2/SpgService/TransactionVerificationWithToken',
-    //             ['headers' => $headers, 'body' => $body_data]
-    //         );
-    //         // dd($res);
-    //         if (empty($res)) {
-    //             return redirect()->back()->with('error', 'No response! i.e., If your payment has
-    //            been deducted, Please contact your institute.');
-    //         }
-    //         $result = json_decode($res->getBody(), true);
-    //         // dd($result);
-    //         if(!empty($result)){
-    //             $data['payment_status'] = $result['PaymentStatus'];
-    //             $data['status_code'] = $result['status'];
-    //             $data['transaction_id'] = $result['TransactionId'];
-    //             $data['transaction_date'] = $result['TransactionDate'];
-    //             $data['br_code'] = $result['BrCode'];
-    //             $data['pay_mode'] = $result['PayMode'];
+    private function processPayInvoice($payInvoice, array $verification)
+    {
+        try {
+            DB::transaction(function () use ($payInvoice, $verification) {
 
-    //             $data['payable_amount'] = $result['TotalAmount'];
-    //             $data['spg_pay_amount'] = $result['PayAmount'];
-    //             $data['vat'] = $result['Vat'];
-    //             $data['commission'] = $result['Commission'];
-    //             $data['scroll_no'] = $result['ScrollNo'];
-    //             //for online payment status all time completed
-    //             $data['status'] = PaymentInfo::STATUS_COMPLETE;
+                $statusCode    = $verification['Status'] ?? null;
+                $token         = $verification['Token'] ?? null;
+                Log::channel('payment_log')->info("StatusCode {$statusCode}", [$verification]);
 
-    //             $feeAssigns = FeeAssign::find($data['fee_assign_id']);
-    //             $payment_infos = PaymentInfo::create($data);
-    //             $user = Member::find($data['member_id']);
-    //             if(!is_null($payment_infos)){
-    //                 foreach($feeAssigns as $feeAssign){
-    //                     PaymentInfoItem::create([
-    //                         'payment_info_id' => $payment_infos->id,
-    //                         'fee_assign_id' => $feeAssign->id,
-    //                         'fee_assign_id' => $feeAssign->id,
-    //                         'assign_date' => $feeAssign->assign_date,
-    //                         'amount' => $feeAssign->amount,
-    //                         'fine_amount' => $feeAssign->fine_amount,
-    //                         'monthly' => $feeAssign->monthly,
-    //                     ]);
-    //                     $feeAssign->update([
-    //                         'status' => FeeAssign::STATUS_PAID
-    //                     ]);
-    //                 }
+                $data['payment_status'] = $statusCode ?? null;
+                $data['status_code'] = $statusCode ?? null;
+                $data['transaction_id'] = $verification['TransactionId'] ?? null;
+                $data['transaction_date'] = $verification['TransactionDate'] ?? null;
+                $data['br_code'] = $verification['Branch'] ?? null;
+                $data['pay_mode'] = $verification['PayMode'] ?? null;
 
-    //                 $user->paymentCreate()->create([
-    //                     'payment_info_id' => $payment_infos->id
-    //                 ]);
+                $data['payable_amount'] = $verification['RequestTotalAmount'];
+                $data['spg_pay_amount'] = $verification['CustomerPaidAmount'];
+                $data['vat'] =  $verification['vat'] ?? null;
+                $data['commission'] = $verification['commission'] ?? null;
+                $data['scroll_no'] = $verification['ScrollNo'] ?? null;
+                $data['invoice_no'] = $payInvoice;
+                $data['session_token'] = $token;
+                $data['ledger_id'] = 1;
 
-    //                 record_created_flash('Payment created Sucessfully');
+                //for online payment status all time completed
+                $data['status'] = $statusCode == 200 ? PaymentInfo::STATUS_COMPLETE : PaymentInfo::STATUS_PENDING;
 
-    //                 // Ledger traces
-    //                 // foreach ($payment_infos as $paymentInfo) {
-    //                 foreach ($payment_infos->feeAssign as $feeAssign) {
-    //                     dispatch(new UpdateFeeLedgerTracesJob($feeAssign, $payment_infos));
-    //                     }
-    //                 // }
-    //             }
+                $paymentRequest = PaymentRequest::where('invoice', $payInvoice)->first();
 
+                $fee_assign_ids = $paymentRequest->fee_assign_ids;
+                $feeAssigns = FeeAssign::find($fee_assign_ids);
 
-    //             return redirect()->route('member.memberInfo');
-    //         }
-    //         // dd('result', $result, $request->all());
-    //     }else{
-    //         if (session()->exists('online_payment')) {
-    //             session()->forget('online_payment');
-    //         }
-    //         record_warning_flash('Payment created Fail');
-    //         return redirect()->route('member.memberInfo');
-    //     }
+                $payment_infos = PaymentInfo::create($data);
+                $user = Member::find($data['member_id']);
 
-    // }
+                if (!is_null($payment_infos)) {
+                    foreach ($feeAssigns as $feeAssign) {
+                        PaymentInfoItem::create([
+                            'payment_info_id' => $payment_infos->id,
+                            'fee_assign_id' => $feeAssign->id,
+                            'fee_assign_id' => $feeAssign->id,
+                            'assign_date' => $feeAssign->assign_date,
+                            'amount' => $feeAssign->amount,
+                            'fine_amount' => $feeAssign->fine_amount,
+                            'monthly' => $feeAssign->monthly,
+                        ]);
+                        $feeAssign->update([
+                            'status' => $statusCode == 200 ? FeeAssign::STATUS_PAID : FeeAssign::STATUS_DUE
+                        ]);
+                    }
+
+                    $user->paymentCreate()->create([
+                        'payment_info_id' => $payment_infos->id
+                    ]);
+
+                    record_created_flash('Payment created Sucessfully');
+
+                    // Ledger traces
+                    // foreach ($payment_infos as $paymentInfo) {
+                    foreach ($payment_infos->feeAssign as $feeAssign) {
+                        dispatch(new UpdateFeeLedgerTracesJob($feeAssign, $payment_infos));
+                    }
+                    // }
+                }
+            });
+
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Pay invoice updated'
+            ]);
+        } catch (\Throwable $e) {
+            Log::channel('payment_log')->error("Error in processPayInvoice: " . $e->getMessage(), [
+                'trace' => $e->getTraceAsString()
+            ]);
+
+            something_wrong_flash('An unexpected error occured!');
+            // return response()->json(['errors' => ApiResponseHelper::formatErrors(ApiResponseHelper::SYSTEM_ERROR, [ServerErrorMask::SERVER_ERROR])], 500);
+        }
+    }
 
     public function paymentReturnUrl(Request $request)
     {
@@ -514,89 +450,6 @@ class PaymentController extends Controller
     }
 
 
-
-    // public function paymentCreate(PaymentCreateRequest $request){
-    //     $data = $request->validated();
-
-    //     // dd('data',$data);
-    //     //create payment member or admin detect
-    //     if(Auth::guard('admin')->check()){
-    //        $user = User::find(Auth::guard('admin')->user()->id);
-    //        $data['status'] = PaymentInfo::STATUS_PENDING;
-    //        $data['created_by'] =$user->id;
-    //     }else{
-    //         $user = Member::find(Auth::guard('web')->user()->id);
-    //         $data['status'] = PaymentInfo::STATUS_PENDING;
-    //         $data['created_by'] =$user->id;
-    //     }
-
-    //     try {
-    //         DB::beginTransaction();
-    //          //get member fee assgin data
-    //         $feeAssigns = FeeAssign::find($data['fee_assign_id']);
-
-    //         // dd($feeAssigns, $data['fee_assign_id']);
-
-    //         $data['fine_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0;
-    //         $data['payable_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('amount')->sum('amount') : 0;
-    //         $data['total_amount'] =  $data['fine_amount'] + $data['payable_amount'];
-    //         // dd($data);
-    //         $document_files = [];
-    //         // dd($data['document_files']);
-    //         //document file store
-    //         if( isset($data['document_files']) && count($data['document_files']) > 0){
-    //             foreach($data['document_files'] as $file){
-    //                 // dd($file, 'file');
-    //                $file_data =  $this->fileUploadService->uploadFile($file, PaymentInfo::DOCUMENT_FILES);
-    //                array_push($document_files, $file_data);
-    //             }
-    //             $data['document_files'] = implode(',',$document_files);
-    //         }
-    //         $data['invoice_no']= invoiceNoGenerate();
-    //         $data['payment_date']= Carbon::now()->format('Y-m-d');
-
-    //         //  dd($data);
-
-    //         // dd($data);
-    //         $payment_infos = PaymentInfo::create($data);
-
-    //         if(!is_null($payment_infos)){
-    //             foreach($feeAssigns as $feeAssign){
-    //                 PaymentInfoItem::create([
-    //                     'payment_info_id' => $payment_infos->id,
-    //                     'fee_assign_id' => $feeAssign->id,
-    //                     'fee_assign_id' => $feeAssign->id,
-    //                     'assign_date' => $feeAssign->assign_date,
-    //                     'amount' => $feeAssign->amount,
-    //                     'fine_amount' => $feeAssign->fine_amount,
-    //                     'monthly' => $feeAssign->monthly,
-    //                 ]);
-    //                 $feeAssign->update([
-    //                     'status' => FeeAssign::STATUS_PAID
-    //                 ]);
-    //             }
-
-    //             $user->paymentCreate()->create([
-    //                 'payment_info_id' => $payment_infos->id
-    //             ]);
-
-    //             record_created_flash('Payment created Sucessfully');
-    //         }
-
-    //         // dd('result=',$payment_infos, $data);
-    //         DB::commit();
-
-    //         return redirect()->back();
-    //     } catch (\Exception $e) {
-    //         DB::rollBack();
-    //         something_wrong_flash($e->getMessage());
-    //         // dd($e->getMessage());
-    //         //throw $th;
-    //     }
-
-    // }
-
-
     public function paymentInvoice($id)
     {
         $paymentInfo = PaymentInfo::query()->with(['member.associatorsInfo', 'paymentsInfoItems.feeSetup'])->find($id);
@@ -620,7 +473,6 @@ class PaymentController extends Controller
 
     }
 
-
     public function numberToSentence($number)
     {
         $formatter = new NumberFormatter(config('app.locale'), NumberFormatter::SPELLOUT);
@@ -641,5 +493,32 @@ class PaymentController extends Controller
             $text = $text  . "\n" . $qr_code_info;
         }
         return $text;
+    }
+
+
+    public function postPaymentReconcile(Request $request)
+    {
+        $paymentStatus = $request->input('status') ?? null;
+        $invoice = $request->input('invoice') ?? null;
+        $payInvoice = PaymentRequest::where('invoice_no', $invoice)->first();
+
+        if ($paymentStatus != 200) {
+            something_wrong_flash('Payment attempt canceled/failed');
+        } else {
+            record_created_flash('Payment has been done successfully!');
+        }
+
+        // if ($payInvoice) {
+        //     $returnUrl = $payInvoice?->instituteDetail?->vendor?->payment_portal ?? null;
+        //     if ($returnUrl) {
+        //         return redirect()->away(
+        //             $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
+        //         );
+        //     }
+        // }
+
+        // if (!$returnUrl) {
+        //     return response()->json(["Status" => 200, "Message" => "Payment verification reconciliation successful"]);
+        // }
     }
 }

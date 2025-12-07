@@ -57,11 +57,13 @@ Route::prefix('member')->as('member.')->middleware(['auth:web','MemberCheck'])->
     Route::get('/payment/invoice/{id}', [MemberInfoController::class, 'paymentInvoice'])->name('payment.invoice');
     // Route::get('/payment', [MemberInfoController::class, 'memberPayment'])->name('memberPayment');
 });
-//member hhome page
+
+//member home page
 Route::prefix('api')->group(function () {
     Route::get('fetch-all-disticts', [AjaxController::class, 'fetchAllDicticts']);
     Route::get('get-members', [AjaxController::class, 'getMembers'])->name('get.members');
 });
 
+Route::get('/payment/reconcile', [PaymentController::class, 'postPaymentReconcile']);
 Auth::routes();
 

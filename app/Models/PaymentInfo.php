@@ -92,6 +92,4 @@ class PaymentInfo extends Model
             'fee_assign_id',
         );
     }
-
-
 }
