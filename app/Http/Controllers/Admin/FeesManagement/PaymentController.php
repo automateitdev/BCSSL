@@ -305,7 +305,7 @@ class PaymentController extends Controller
                         'payment_info_id' => $payment_infos->id
                     ]);
 
-                    record_created_flash('Payment created Sucessfully');
+                    // record_created_flash('Payment created Sucessfully');
 
                     // Ledger traces
                     // foreach ($payment_infos as $paymentInfo) {
@@ -314,6 +314,7 @@ class PaymentController extends Controller
                     }
                     // }
                 }
+
 
                 $paymentRequest->status = $statusCode;
                 $paymentRequest->save();
