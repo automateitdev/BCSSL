@@ -327,8 +327,7 @@ class PaymentController extends Controller
 
     public function handlePayFlexVerification(Request $request)
     {
-
-
+        dd($request->all());
         Log::alert('HITS HANDLE PAYFLEX:::::::::::', [$request->all()]);
         // $data = $request->all();
         // // Check if PayFlex has provided data
