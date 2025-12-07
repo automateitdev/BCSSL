@@ -57,183 +57,278 @@ class PaymentController extends Controller
         });
     }
 
+    // public function paymentCreate(PaymentCreateRequest $request)
+    // {
+    //     $data = $request->validated();
+    //     //create payment member or admin detect
+    //     if (Auth::guard('admin')->check()) {
+    //         $user = User::find(Auth::guard('admin')->user()->id);
+    //         $data['status'] = PaymentInfo::STATUS_PENDING;
+    //         $data['creator_id'] = $user->id;
+    //         $data['created_by'] = 'admin';
+
+    //         $applicantContact = $user->mobile;
+    //     } else {
+    //         $user = Member::find(Auth::guard('web')->user()->id);
+    //         $data['status'] = PaymentInfo::STATUS_PENDING;
+    //         $data['creator_id'] = $user->id;
+    //         $data['created_by'] = 'member';
+    //         $applicantContact = $user->formatted_number;
+    //     }
+
+
+    //     try {
+    //         DB::beginTransaction();
+    //         //get member fee assgin data
+    //         $feeAssigns = FeeAssign::find($data['fee_assign_id']);
+
+    //         // dd($feeAssign, $data['fee_assign_id']);
+
+    //         $data['fine_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0;
+    //         $data['payable_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('amount')->sum('amount') : 0;
+    //         $data['total_amount'] =  $data['fine_amount'] + $data['payable_amount'];
+
+
+    //         // dd($data);
+    //         $document_files = [];
+    //         // dd($data['document_files']);
+    //         //document file store
+    //         // if (isset($data['payment_type']) && $data['payment_type'] == PaymentInfo::PAYMENT_TYPE_MANUAL) {
+    //         if (isset($data['document_files']) && count($data['document_files']) > 0) {
+    //             foreach ($data['document_files'] as $file) {
+    //                 // dd($file, 'file');
+    //                 $file_data =  $this->fileUploadService->uploadFile($file, PaymentInfo::DOCUMENT_FILES);
+    //                 array_push($document_files, $file_data);
+    //             }
+    //             $data['document_files'] = implode(',', $document_files);
+    //         }
+    //         // }
+
+    //         $now = Carbon::now();
+    //         $invoiceDate = $now->format('Y-m-d');
+
+    //         $unique_code = $now->format('ymdHis');
+    //         $unique_invoice = 'INV' . $user->id . $unique_code;
+    //         $data['invoice_no'] = strtoupper($unique_invoice);
+
+    //         $data['payment_date'] = Carbon::now()->format('Y-m-d');
+
+    //         if (isset($data['payment_type']) && $data['payment_type'] == PaymentInfo::PAYMENT_TYPE_ONLINE) {
+
+    //             $paymentRequest = PaymentRequest::create([
+    //                 'invoice'        => $data['invoice_no'],
+    //                 'fee_assign_ids' => $data['fee_assign_id'],
+    //                 'total_amount'   => $data['total_amount'],
+    //                 'creator_id'     => $data['creator_id'],
+    //                 'created_by'     => $data['created_by'],
+    //                 'status'         => 'pending',
+    //             ]);
+
+    //             Log::alert('Payment Request saved: ', [
+    //                 $paymentRequest
+    //             ]);
+
+
+    //             $data['ladger_id'] = 1;
+    //             unset($data['document_files']);
+    //             session(['online_payment' => $data]);
+    //             // dd(session()->get('online_payment'));
+
+    //             $invoiceData = [
+    //                 'invoice' => $unique_invoice,
+    //                 'invoiceDate' => $invoiceDate,
+    //             ];
+
+    //             $applicantData = [
+    //                 'name' => $user?->name ?? null,
+    //                 'contact' => $applicantContact ?? "00000000000",
+    //             ];
+
+    //             $gatewayDetails = [
+    //                 'spg_user'     => $this->spg_access_username,
+    //                 'spg_password' => $this->spg_access_password,
+    //                 'spg_account'  => $this->spg_ar_account,
+    //                 'spg_auth'     => $this->spg_auth,
+    //                 'spg_base_url' => $this->spg_base_url_api,
+    //                 'spg_redirect_url' => $this->spg_redirect_url
+    //             ];
+
+    //             $accounts[] =   [
+    //                 'crAccount' => $this->spg_ar_account,
+    //                 'crAmount' => (float)$data['total_amount']
+    //             ];
+
+    //             $disbursements = [
+    //                 'accounts' => $accounts
+    //             ];
+
+    //             Log::channel('payflex_log')->info('disbursements: ', [$disbursements]);
+
+    //             $initResponse = $this->paymentService->initiateGatewayPayment('SPG', $gatewayDetails, $applicantData, $data['total_amount'], $disbursements, $invoiceData);
+
+    //             Log::channel('payflex_log')->info('Payment init response: ', ['response' => $initResponse]);
+
+    //             if ($initResponse['status'] == 'success' && !empty($initResponse['payment_url'])) {
+    //                 return redirect()->to($initResponse['payment_url']);
+    //             } else {
+    //                 something_wrong_flash('Could not initiate the payment! try later.');
+    //             }
+    //         } else {
+
+    //             // dd($data);\
+    //             if (isset($data['document_files']) && !empty($data['document_files'])) {
+    //                 $paymentData = collect($data)->except(['fee_assign_id'])->toArray();
+    //             } else {
+    //                 $paymentData = collect($data)->except(['fee_assign_id', 'document_files'])->toArray();
+    //             }
+
+    //             $payment_infos = PaymentInfo::create($paymentData);
+
+    //             if (!is_null($payment_infos)) {
+    //                 foreach ($feeAssigns as $feeAssign) {
+    //                     PaymentInfoItem::create([
+    //                         'payment_info_id' => $payment_infos->id,
+    //                         'fee_assign_id' => $feeAssign->id,
+    //                         'fee_assign_id' => $feeAssign->id,
+    //                         'assign_date' => $feeAssign->assign_date,
+    //                         'amount' => $feeAssign->amount,
+    //                         'fine_amount' => $feeAssign->fine_amount,
+    //                         'monthly' => $feeAssign->monthly,
+    //                     ]);
+    //                     $feeAssign->update([
+    //                         'status' => FeeAssign::STATUS_REQUEST
+    //                     ]);
+    //                 }
+
+    //                 $user->paymentCreate()->create([
+    //                     'payment_info_id' => $payment_infos->id
+    //                 ]);
+
+    //                 record_created_flash('Payment created Sucessfully');
+    //             }
+
+    //             // dd('result=',$payment_infos, $data);
+    //             DB::commit();
+
+    //             return redirect()->back();
+    //         }
+    //     } catch (\Exception $e) {
+
+    //         DB::rollBack();
+    //         Log::channel('payflex_log')->error($e->getMessage());
+    //         something_wrong_flash($e->getMessage());
+    //         //throw $th;
+    //     }
+    // }
+
     public function paymentCreate(PaymentCreateRequest $request)
     {
         $data = $request->validated();
-        // dd('test',$data);
-        // if(!isset($data['payment_type'])){
-        // $data['payment_type'] = PaymentInfo::PAYMENT_TYPE_MANUAL;
-        // something_wrong_flash('Payment Type is required!');
 
-        // die();
-        // when Only Online is active
-        // $data['payment_type'] = PaymentInfo::PAYMENT_TYPE_ONLINE;
-        // if (isset($data['document_files']) && count($data['document_files']) > 0) {
-        //    $data['payment_type'] = PaymentInfo::PAYMENT_TYPE_MANUAL;
-        //   }
-        // }
-
-        // dd('data',$data);
-        //create payment member or admin detect
+        // Detect user type
         if (Auth::guard('admin')->check()) {
             $user = User::find(Auth::guard('admin')->user()->id);
-            $data['status'] = PaymentInfo::STATUS_PENDING;
             $data['creator_id'] = $user->id;
             $data['created_by'] = 'admin';
-
             $applicantContact = $user->mobile;
         } else {
             $user = Member::find(Auth::guard('web')->user()->id);
-            $data['status'] = PaymentInfo::STATUS_PENDING;
             $data['creator_id'] = $user->id;
             $data['created_by'] = 'member';
             $applicantContact = $user->formatted_number;
         }
 
+        // Fee Assigns & totals
+        $feeAssigns = FeeAssign::find($data['fee_assign_id']);
+        $data['fine_amount'] = $feeAssigns?->whereNotNull('fine_amount')->sum('fine_amount') ?? 0;
+        $data['payable_amount'] = $feeAssigns?->whereNotNull('amount')->sum('amount') ?? 0;
+        $data['total_amount'] = $data['fine_amount'] + $data['payable_amount'];
+
+        // Invoice
+        $now = Carbon::now();
+        $unique_invoice = 'INV' . $user->id . $now->format('ymdHis');
+        $data['invoice_no'] = strtoupper($unique_invoice);
+        $data['payment_date'] = $now->format('Y-m-d');
 
         try {
-            DB::beginTransaction();
-            //get member fee assgin data
-            $feeAssigns = FeeAssign::find($data['fee_assign_id']);
+            if (($data['payment_type'] ?? null) === PaymentInfo::PAYMENT_TYPE_ONLINE) {
 
-            // dd($feeAssign, $data['fee_assign_id']);
-
-            $data['fine_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0;
-            $data['payable_amount'] = !is_null($feeAssigns) ? $feeAssigns->whereNotNull('amount')->sum('amount') : 0;
-            $data['total_amount'] =  $data['fine_amount'] + $data['payable_amount'];
-
-
-            // dd($data);
-            $document_files = [];
-            // dd($data['document_files']);
-            //document file store
-            // if (isset($data['payment_type']) && $data['payment_type'] == PaymentInfo::PAYMENT_TYPE_MANUAL) {
-            if (isset($data['document_files']) && count($data['document_files']) > 0) {
-                foreach ($data['document_files'] as $file) {
-                    // dd($file, 'file');
-                    $file_data =  $this->fileUploadService->uploadFile($file, PaymentInfo::DOCUMENT_FILES);
-                    array_push($document_files, $file_data);
-                }
-                $data['document_files'] = implode(',', $document_files);
-            }
-            // }
-
-            $now = Carbon::now();
-            $invoiceDate = $now->format('Y-m-d');
-
-            $unique_code = $now->format('ymdHis');
-            $unique_invoice = 'INV' . $user->id . $unique_code;
-            $data['invoice_no'] = strtoupper($unique_invoice);
-
-            $data['payment_date'] = Carbon::now()->format('Y-m-d');
-
-            if (isset($data['payment_type']) && $data['payment_type'] == PaymentInfo::PAYMENT_TYPE_ONLINE) {
-
+                // Create PaymentRequest immediately
                 $paymentRequest = PaymentRequest::create([
-                    'invoice'        => $data['invoice_no'],
+                    'invoice' => $data['invoice_no'],
                     'fee_assign_ids' => $data['fee_assign_id'],
-                    'total_amount'   => $data['total_amount'],
-                    'creator_id'     => $data['creator_id'],
-                    'created_by'     => $data['created_by'],
-                    'status'         => 'pending',
+                    'total_amount' => $data['total_amount'],
+                    'creator_id' => $data['creator_id'],
+                    'created_by' => $data['created_by'],
+                    'status' => 'pending',
                 ]);
 
-                Log::alert('Payment Request saved: ', [
-                    $paymentRequest
-                ]);
+                Log::alert('Payment Request saved: ', [$paymentRequest]);
 
-
-                $data['ladger_id'] = 1;
+                // Save data to session
                 unset($data['document_files']);
                 session(['online_payment' => $data]);
-                // dd(session()->get('online_payment'));
 
-                $invoiceData = [
-                    'invoice' => $unique_invoice,
-                    'invoiceDate' => $invoiceDate,
-                ];
-
-                $applicantData = [
-                    'name' => $user?->name ?? null,
-                    'contact' => $applicantContact ?? "00000000000",
-                ];
-
+                // Prepare SPG
+                $invoiceData = ['invoice' => $unique_invoice, 'invoiceDate' => $now->format('Y-m-d')];
+                $applicantData = ['name' => $user?->name, 'contact' => $applicantContact];
                 $gatewayDetails = [
-                    'spg_user'     => $this->spg_access_username,
+                    'spg_user' => $this->spg_access_username,
                     'spg_password' => $this->spg_access_password,
-                    'spg_account'  => $this->spg_ar_account,
-                    'spg_auth'     => $this->spg_auth,
+                    'spg_account' => $this->spg_ar_account,
+                    'spg_auth' => $this->spg_auth,
                     'spg_base_url' => $this->spg_base_url_api,
                     'spg_redirect_url' => $this->spg_redirect_url
                 ];
 
-                $accounts[] =   [
-                    'crAccount' => $this->spg_ar_account,
-                    'crAmount' => (float)$data['total_amount']
-                ];
+                $disbursements = [['crAccount' => $this->spg_ar_account, 'crAmount' => (float)$data['total_amount']]];
 
-                $disbursements = [
-                    'accounts' => $accounts
-                ];
+                $initResponse = $this->paymentService->initiateGatewayPayment(
+                    'SPG',
+                    $gatewayDetails,
+                    $applicantData,
+                    $data['total_amount'],
+                    ['accounts' => $disbursements],
+                    $invoiceData
+                );
 
-                Log::channel('payflex_log')->info('disbursements: ', [$disbursements]);
-
-                $initResponse = $this->paymentService->initiateGatewayPayment('SPG', $gatewayDetails, $applicantData, $data['total_amount'], $disbursements, $invoiceData);
-
-                Log::channel('payflex_log')->info('Payment init response: ', ['response' => $initResponse]);
-
-                if ($initResponse['status'] == 'success' && !empty($initResponse['payment_url'])) {
+                if ($initResponse['status'] === 'success' && !empty($initResponse['payment_url'])) {
                     return redirect()->to($initResponse['payment_url']);
                 } else {
-                    something_wrong_flash('Could not initiate the payment! try later.');
+                    something_wrong_flash('Could not initiate the payment. Try later.');
+                    return redirect()->back();
                 }
             } else {
-
-                // dd($data);\
-                if (isset($data['document_files']) && !empty($data['document_files'])) {
-                    $paymentData = collect($data)->except(['fee_assign_id'])->toArray();
-                } else {
+                // Manual payment
+                DB::transaction(function () use ($data, $feeAssigns, $user) {
                     $paymentData = collect($data)->except(['fee_assign_id', 'document_files'])->toArray();
-                }
+                    $paymentInfo = PaymentInfo::create($paymentData);
 
-                $payment_infos = PaymentInfo::create($paymentData);
-
-                if (!is_null($payment_infos)) {
                     foreach ($feeAssigns as $feeAssign) {
                         PaymentInfoItem::create([
-                            'payment_info_id' => $payment_infos->id,
-                            'fee_assign_id' => $feeAssign->id,
+                            'payment_info_id' => $paymentInfo->id,
                             'fee_assign_id' => $feeAssign->id,
                             'assign_date' => $feeAssign->assign_date,
                             'amount' => $feeAssign->amount,
                             'fine_amount' => $feeAssign->fine_amount,
                             'monthly' => $feeAssign->monthly,
                         ]);
-                        $feeAssign->update([
-                            'status' => FeeAssign::STATUS_REQUEST
-                        ]);
+                        $feeAssign->update(['status' => FeeAssign::STATUS_REQUEST]);
                     }
 
-                    $user->paymentCreate()->create([
-                        'payment_info_id' => $payment_infos->id
-                    ]);
-
-                    record_created_flash('Payment created Sucessfully');
-                }
-
-                // dd('result=',$payment_infos, $data);
-                DB::commit();
+                    $user->paymentCreate()->create(['payment_info_id' => $paymentInfo->id]);
+                    record_created_flash('Payment created successfully');
+                });
 
                 return redirect()->back();
             }
         } catch (\Exception $e) {
-
-            DB::rollBack();
             Log::channel('payflex_log')->error($e->getMessage());
             something_wrong_flash($e->getMessage());
-            //throw $th;
+            return redirect()->back();
         }
     }
+
 
     public function handlePayFlexVerification(Request $request)
     {
