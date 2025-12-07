@@ -76,6 +76,7 @@ class PayflexController extends Controller
                     'session_token'    => $verification['Token'] ?? null,
                     'ledger_id'        => 1,
                     'fine_amount'      => !is_null($feeAssigns) ? $feeAssigns->whereNotNull('fine_amount')->sum('fine_amount') : 0,
+                    'total_amount'     => $paymentRequest->total_amount,
                     'status'           => ($statusCode == 200)
                         ? PaymentInfo::STATUS_COMPLETE
                         : PaymentInfo::STATUS_PENDING,
