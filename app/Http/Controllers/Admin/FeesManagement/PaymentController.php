@@ -419,12 +419,11 @@ class PaymentController extends Controller
 
                 // Update PaymentRequest
                 $paymentRequest->update(['status' => $statusCode]);
-
-                return response()->json([
-                    'status'  => 'success',
-                    'message' => 'Pay invoice updated'
-                ]);
             });
+            return response()->json([
+                'status'  => 'success',
+                'message' => 'Pay invoice updated'
+            ]);
         } catch (\Throwable $e) {
 
             Log::channel('payflex_log')->error("ERROR processing invoice {$invoice}", [
