@@ -743,15 +743,9 @@ class PaymentController extends Controller
             record_created_flash('Payment has been done successfully!');
         }
 
-        $returnUrl = null;
-        if ($payInvoice) {
-            return redirect()->away(
+        $returnUrl = config('app.url');
+        return redirect()->to(
                 $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
-            );
-        }
-
-        if (!$returnUrl) {
-            return response()->json(["Status" => 200, "Message" => "Payment verification reconciliation successful"]);
-        }
+        );
     }
 }
