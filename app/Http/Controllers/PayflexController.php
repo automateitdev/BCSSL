@@ -35,7 +35,7 @@ class PayflexController extends Controller
     private function processPayInvoice(string $invoice, array $verification)
     {
         try {
-            Log::channel('payflex_log')->info('I ENTERED IN THE INVOICE PORCESS HUHAHAHAHAHAH');
+            Log::channel('payflex_log')->info("Verifying started for invoice: {$invoice}");
             DB::transaction(function () use ($invoice, $verification) {
 
                 $statusCode = $verification['Status'] ?? null;
