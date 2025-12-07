@@ -114,7 +114,13 @@ class PayflexController extends Controller
                 }
 
                 // Update PaymentRequest
-                $paymentRequest->update(['status' => $statusCode]);
+                $paymentRequest->update([
+                    'session_token' => $verification['Token'] ?? null,
+                    'spg_transaction_id' => $verification['TransactionId'],
+                    'status'  => $statusCode == 200 ? 'success' : 'failed',
+                    'gateway_status_code' => $statusCode,
+                    'paid_at' => $verification['TransactionDate'],
+                ]);
             });
             return response()->json([
                 'status'  => 'success',
