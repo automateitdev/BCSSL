@@ -65,6 +65,7 @@ class PayflexController extends Controller
                     'status_code'      => $statusCode,
                     'transaction_id'   => $verification['TransactionId'] ?? null,
                     'transaction_date' => $verification['TransactionDate'] ?? null,
+                    'payment_date'     => $verification['TransactionDate'] ?? null,
                     'br_code'          => $verification['Branch'] ?? null,
                     'pay_mode'         => $verification['PayMode'] ?? null,
                     'payable_amount'   => $verification['RequestTotalAmount'] ?? 0,
