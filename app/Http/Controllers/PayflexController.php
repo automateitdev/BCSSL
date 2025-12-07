@@ -60,7 +60,7 @@ class PayflexController extends Controller
 
                 // Prepare PaymentInfo data
                 $data = [
-                    'member_id'        => $user->creator_id,
+                    'member_id'        => $user->id,
                     'payment_status'   => $statusCode,
                     'status_code'      => $statusCode,
                     'transaction_id'   => $verification['TransactionId'] ?? null,
