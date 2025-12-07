@@ -24,6 +24,6 @@ Route::post('/DataUpdate', [SpgPaymentController::class, 'dataUpdate']);
 
 // payflex essential routes
 Route::post('/pay-flex/verify', [PayflexController::class, 'handlePayFlexVerification'])->name('payFlex.verification');
-Route::post('/pay-flex/notify', [PayflexController::class, 'handlePayFlexNotification'])->name('payFlex.notification');
+// Route::post('/pay-flex/notify', [PayflexController::class, 'handlePayFlexNotification'])->name('payFlex.notification');
 
 // Route::post('/member-portal-register', [MemberAuthController::class, 'memberRegister']);
