@@ -327,23 +327,41 @@ class PaymentController extends Controller
 
     public function handlePayFlexVerification(Request $request)
     {
-        // dd($request->all());
-        // return response()->json($request->all());
         Log::alert('HITS HANDLE PAYFLEX:::::::::::', [$request->all()]);
         $data = $request->all();
-        // Check if PayFlex has provided data
+
         if (empty($data['data'])) {
-            return response()->json(['status' => 'error', 'message' => 'No data received'], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'No data received'
+            ], 400);
         }
 
-        $verification = $data['data']; // Standardized payload from PayFlex
+        $verification = $data['data'];
         $invoice = $verification['InvoiceNo'] ?? null;
+
         if (!$invoice) {
-            return response()->json(['status' => 'error', 'message' => 'Invoice missing'], 400);
+            return response()->json([
+                'status' => 'error',
+                'message' => 'Invoice missing'
+            ], 400);
         }
 
-        return $this->processPayInvoice($invoice, $verification);
+        // Ensure the result is a Response
+        $result = $this->processPayInvoice($invoice, $verification);
+
+        // If processPayInvoice returns a string, wrap it in JSON
+        if (is_string($result)) {
+            return response()->json([
+                'status' => 'success',
+                'message' => $result,
+            ]);
+        }
+
+        // If processPayInvoice already returns a Response, just return it
+        return $result;
     }
+
 
     // private function processPayInvoice($payInvoice, array $verification)
     // {
