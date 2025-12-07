@@ -504,8 +504,10 @@ class PaymentController extends Controller
 
         if ($paymentStatus != 200) {
             something_wrong_flash('Payment attempt canceled/failed');
+            return redirect()->back();
         } else {
             record_created_flash('Payment has been done successfully!');
+            return redirect()->back();
         }
 
         // if ($payInvoice) {
