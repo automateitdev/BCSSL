@@ -130,7 +130,7 @@ class PaymentController extends Controller
 
                 PaymentRequest::create([
                     'invoice'        => $data['invoice_no'],
-                    'fee_assign_ids' => $request->fee_assign_ids,
+                    'fee_assign_ids' => $data['fee_assign_id'],
                     'total_amount'   => $data['total_amount'],
                     'status'         => 'pending',
                 ]);
