@@ -745,11 +745,9 @@ class PaymentController extends Controller
 
         $returnUrl = null;
         if ($payInvoice) {
-            if ($returnUrl) {
-                return redirect()->away(
-                    $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
-                );
-            }
+            return redirect()->away(
+                $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
+            );
         }
 
         if (!$returnUrl) {
