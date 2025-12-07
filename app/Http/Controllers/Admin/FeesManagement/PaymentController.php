@@ -743,7 +743,7 @@ class PaymentController extends Controller
             record_created_flash('Payment has been done successfully!');
         }
 
-        $returnUrl = config('app.url');
+        $returnUrl = null;
         if ($payInvoice) {
             if ($returnUrl) {
                 return redirect()->away(
