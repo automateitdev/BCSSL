@@ -256,7 +256,7 @@ class PaymentController extends Controller
 
                 $statusCode    = $verification['Status'] ?? null;
                 $token         = $verification['Token'] ?? null;
-                Log::channel('payment_log')->info("StatusCode {$statusCode}", [$verification]);
+                Log::channel('payflex_log')->info("StatusCode {$statusCode}", [$verification]);
 
                 $data['payment_status'] = $statusCode ?? null;
                 $data['status_code'] = $statusCode ?? null;
@@ -329,7 +329,7 @@ class PaymentController extends Controller
                 'trace' => $e->getTraceAsString()
             ]);
 
-            something_wrong_flash('An unexpected error occured!');
+            // something_wrong_flash('An unexpected error occured!');
             // return response()->json(['errors' => ApiResponseHelper::formatErrors(ApiResponseHelper::SYSTEM_ERROR, [ServerErrorMask::SERVER_ERROR])], 500);
         }
     }
