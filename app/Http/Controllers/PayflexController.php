@@ -91,7 +91,7 @@ class PayflexController extends Controller
                         'fee_assign_id'   => $feeAssign->id,
                         'assign_date'     => $feeAssign->assign_date,
                         'amount'          => $feeAssign->amount,
-                        'fine_amount'     => $feeAssign->fine_amount,
+                        'fine_amount'     => $feeAssign->fine_amount ?? 0,
                         'monthly'         => $feeAssign->monthly,
                     ]);
 

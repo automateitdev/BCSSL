@@ -292,7 +292,11 @@ class PaymentController extends Controller
                     $invoiceData
                 );
 
-                return response()->json($initResponse, 200);
+                if ($initResponse['status'] == 'success' && !empty($initResponse['payment_url'])) {
+                    return redirect()->to($initResponse['payment_url']);
+                } else {
+                    something_wrong_flash('Could not initiate the payment! try later.');
+                }
             } else {
                 // Manual payment
                 DB::transaction(function () use ($data, $feeAssigns, $user) {
