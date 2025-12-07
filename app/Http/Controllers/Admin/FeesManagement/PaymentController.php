@@ -128,12 +128,17 @@ class PaymentController extends Controller
 
             if (isset($data['payment_type']) && $data['payment_type'] == PaymentInfo::PAYMENT_TYPE_ONLINE) {
 
-                PaymentRequest::create([
+                $paymentRequest = PaymentRequest::create([
                     'invoice'        => $data['invoice_no'],
                     'fee_assign_ids' => $data['fee_assign_id'],
                     'total_amount'   => $data['total_amount'],
                     'status'         => 'pending',
                 ]);
+
+                Log::alert('Payment Request saved: ', [
+                    $paymentRequest
+                ]);
+
 
                 $data['ladger_id'] = 1;
                 unset($data['document_files']);
