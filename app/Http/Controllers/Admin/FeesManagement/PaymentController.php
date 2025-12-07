@@ -225,7 +225,6 @@ class PaymentController extends Controller
     {
         $data = $request->validated();
 
-        dd($data);
         // Detect user type
         if (Auth::guard('admin')->check()) {
             $user = User::find(Auth::guard('admin')->user()->id);
