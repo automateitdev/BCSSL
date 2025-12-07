@@ -18,6 +18,8 @@ return new class extends Migration
             $table->string('spg_transaction_id')->nullable();
             $table->string('gateway_status_code')->nullable();
             $table->timestamp('paid_at')->nullable();
+            $table->unsignedBigInteger('creator_id')->nullable();
+            $table->string('created_by')->nullable();
             $table->timestamps();
         });
     }

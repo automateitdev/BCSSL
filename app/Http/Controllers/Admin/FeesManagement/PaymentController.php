@@ -249,91 +249,194 @@ class PaymentController extends Controller
         return $this->processPayInvoice($invoice, $verification);
     }
 
-    private function processPayInvoice($payInvoice, array $verification)
+    // private function processPayInvoice($payInvoice, array $verification)
+    // {
+    //     try {
+    //         DB::transaction(function () use ($payInvoice, $verification) {
+
+    //             $statusCode    = $verification['Status'] ?? null;
+    //             $token         = $verification['Token'] ?? null;
+    //             Log::channel('payflex_log')->info("StatusCode {$statusCode}", [$verification]);
+
+    //             $data['payment_status'] = $statusCode ?? null;
+    //             $data['status_code'] = $statusCode ?? null;
+    //             $data['transaction_id'] = $verification['TransactionId'] ?? null;
+    //             $data['transaction_date'] = $verification['TransactionDate'] ?? null;
+    //             $data['br_code'] = $verification['Branch'] ?? null;
+    //             $data['pay_mode'] = $verification['PayMode'] ?? null;
+
+    //             $data['payable_amount'] = $verification['RequestTotalAmount'];
+    //             $data['spg_pay_amount'] = $verification['CustomerPaidAmount'];
+    //             $data['vat'] =  $verification['vat'] ?? null;
+    //             $data['commission'] = $verification['commission'] ?? null;
+    //             $data['scroll_no'] = $verification['ScrollNo'] ?? null;
+    //             $data['invoice_no'] = $payInvoice;
+    //             $data['session_token'] = $token;
+    //             $data['ledger_id'] = 1;
+
+    //             //for online payment status all time completed
+    //             $data['status'] = $statusCode == 200 ? PaymentInfo::STATUS_COMPLETE : PaymentInfo::STATUS_PENDING;
+
+    //             $paymentRequest = PaymentRequest::where('invoice', $payInvoice)->first();
+
+    //             $fee_assign_ids = $paymentRequest->fee_assign_ids;
+    //             $feeAssigns = FeeAssign::find($fee_assign_ids);
+
+    //             $payment_infos = PaymentInfo::create($data);
+
+    //             if (!is_null($payment_infos)) {
+    //                 foreach ($feeAssigns as $feeAssign) {
+    //                     PaymentInfoItem::create([
+    //                         'payment_info_id' => $payment_infos->id,
+    //                         'fee_assign_id' => $feeAssign->id,
+    //                         'fee_assign_id' => $feeAssign->id,
+    //                         'assign_date' => $feeAssign->assign_date,
+    //                         'amount' => $feeAssign->amount,
+    //                         'fine_amount' => $feeAssign->fine_amount,
+    //                         'monthly' => $feeAssign->monthly,
+    //                     ]);
+    //                     $feeAssign->update([
+    //                         'status' => $statusCode == 200 ? FeeAssign::STATUS_PAID : FeeAssign::STATUS_DUE
+    //                     ]);
+    //                 }
+
+    //                 $user->paymentCreate()->create([
+    //                     'payment_info_id' => $payment_infos->id
+    //                 ]);
+
+    //                 // record_created_flash('Payment created Sucessfully');
+
+    //                 // Ledger traces
+    //                 // foreach ($payment_infos as $paymentInfo) {
+    //                 foreach ($payment_infos->feeAssign as $feeAssign) {
+    //                     dispatch(new UpdateFeeLedgerTracesJob($feeAssign, $payment_infos));
+    //                 }
+    //                 // }
+    //             }
+
+
+    //             $paymentRequest->status = $statusCode;
+    //             $paymentRequest->save();
+    //         });
+
+    //         return response()->json([
+    //             'status'  => 'success',
+    //             'message' => 'Pay invoice updated'
+    //         ]);
+    //     } catch (\Throwable $e) {
+    //         Log::channel('payflex_log')->error("Error in processPayInvoice: ", [
+    //             'error' => $e->getMessage(),
+    //             'trace' => $e->getTraceAsString()
+    //         ]);
+
+    //         // something_wrong_flash('An unexpected error occured!');
+    //         return response()->json('Internal server error', 500);
+    //     }
+    // }
+
+    private function processPayInvoice(string $invoice, array $verification)
     {
         try {
-            DB::transaction(function () use ($payInvoice, $verification) {
+            return DB::transaction(function () use ($invoice, $verification) {
 
-                $statusCode    = $verification['Status'] ?? null;
-                $token         = $verification['Token'] ?? null;
-                Log::channel('payflex_log')->info("StatusCode {$statusCode}", [$verification]);
+                $statusCode = $verification['Status'] ?? null;
 
-                $data['payment_status'] = $statusCode ?? null;
-                $data['status_code'] = $statusCode ?? null;
-                $data['transaction_id'] = $verification['TransactionId'] ?? null;
-                $data['transaction_date'] = $verification['TransactionDate'] ?? null;
-                $data['br_code'] = $verification['Branch'] ?? null;
-                $data['pay_mode'] = $verification['PayMode'] ?? null;
+                Log::channel('payflex_log')->info("Processing invoice {$invoice} with status {$statusCode}");
 
-                $data['payable_amount'] = $verification['RequestTotalAmount'];
-                $data['spg_pay_amount'] = $verification['CustomerPaidAmount'];
-                $data['vat'] =  $verification['vat'] ?? null;
-                $data['commission'] = $verification['commission'] ?? null;
-                $data['scroll_no'] = $verification['ScrollNo'] ?? null;
-                $data['invoice_no'] = $payInvoice;
-                $data['session_token'] = $token;
-                $data['ledger_id'] = 1;
+                // Fetch PaymentRequest
+                $paymentRequest = PaymentRequest::where('invoice', $invoice)->first();
 
-                //for online payment status all time completed
-                $data['status'] = $statusCode == 200 ? PaymentInfo::STATUS_COMPLETE : PaymentInfo::STATUS_PENDING;
-
-                $paymentRequest = PaymentRequest::where('invoice', $payInvoice)->first();
-
-                $fee_assign_ids = $paymentRequest->fee_assign_ids;
-                $feeAssigns = FeeAssign::find($fee_assign_ids);
-
-                $payment_infos = PaymentInfo::create($data);
-                $user = Member::find($data['member_id']);
-
-                if (!is_null($payment_infos)) {
-                    foreach ($feeAssigns as $feeAssign) {
-                        PaymentInfoItem::create([
-                            'payment_info_id' => $payment_infos->id,
-                            'fee_assign_id' => $feeAssign->id,
-                            'fee_assign_id' => $feeAssign->id,
-                            'assign_date' => $feeAssign->assign_date,
-                            'amount' => $feeAssign->amount,
-                            'fine_amount' => $feeAssign->fine_amount,
-                            'monthly' => $feeAssign->monthly,
-                        ]);
-                        $feeAssign->update([
-                            'status' => $statusCode == 200 ? FeeAssign::STATUS_PAID : FeeAssign::STATUS_DUE
-                        ]);
-                    }
-
-                    $user->paymentCreate()->create([
-                        'payment_info_id' => $payment_infos->id
-                    ]);
-
-                    // record_created_flash('Payment created Sucessfully');
-
-                    // Ledger traces
-                    // foreach ($payment_infos as $paymentInfo) {
-                    foreach ($payment_infos->feeAssign as $feeAssign) {
-                        dispatch(new UpdateFeeLedgerTracesJob($feeAssign, $payment_infos));
-                    }
-                    // }
+                if (!$paymentRequest) {
+                    throw new \Exception("PaymentRequest not found for invoice {$invoice}");
                 }
 
+                // Fetch Member
+                $user = Member::find($paymentRequest->member_id);
 
-                $paymentRequest->status = $statusCode;
-                $paymentRequest->save();
+                if (!$user) {
+                    throw new \Exception("Member not found (ID: {$paymentRequest->member_id}) for invoice {$invoice}");
+                }
+
+                // Prepare PaymentInfo data
+                $data = [
+                    'member_id'        => $paymentRequest->member_id,
+                    'payment_status'   => $statusCode,
+                    'status_code'      => $statusCode,
+                    'transaction_id'   => $verification['TransactionId'] ?? null,
+                    'transaction_date' => $verification['TransactionDate'] ?? null,
+                    'br_code'          => $verification['Branch'] ?? null,
+                    'pay_mode'         => $verification['PayMode'] ?? null,
+                    'payable_amount'   => $verification['RequestTotalAmount'] ?? 0,
+                    'spg_pay_amount'   => $verification['CustomerPaidAmount'] ?? 0,
+                    'vat'              => $verification['vat'] ?? null,
+                    'commission'       => $verification['commission'] ?? null,
+                    'scroll_no'        => $verification['ScrollNo'] ?? null,
+                    'invoice_no'       => $invoice,
+                    'session_token'    => $verification['Token'] ?? null,
+                    'ledger_id'        => 1,
+                    'status'           => ($statusCode == 200)
+                        ? PaymentInfo::STATUS_COMPLETE
+                        : PaymentInfo::STATUS_PENDING,
+                ];
+
+                // Save PaymentInfo
+                $paymentInfo = PaymentInfo::create($data);
+
+                // Collect fee assigns
+                $feeAssigns = FeeAssign::whereIn('id', $paymentRequest->fee_assign_ids)->get();
+
+                // Create PaymentInfoItems
+                foreach ($feeAssigns as $feeAssign) {
+                    PaymentInfoItem::create([
+                        'payment_info_id' => $paymentInfo->id,
+                        'fee_assign_id'   => $feeAssign->id,
+                        'assign_date'     => $feeAssign->assign_date,
+                        'amount'          => $feeAssign->amount,
+                        'fine_amount'     => $feeAssign->fine_amount,
+                        'monthly'         => $feeAssign->monthly,
+                    ]);
+
+                    // Update fee assign status
+                    $feeAssign->update([
+                        'status' => ($statusCode == 200)
+                            ? FeeAssign::STATUS_PAID
+                            : FeeAssign::STATUS_DUE
+                    ]);
+                }
+
+                // Attach to user's payments
+                $user->paymentCreate()->create([
+                    'payment_info_id' => $paymentInfo->id
+                ]);
+
+                // Dispatch background jobs
+                foreach ($paymentInfo->feeAssign as $feeAssign) {
+                    dispatch(new UpdateFeeLedgerTracesJob($feeAssign, $paymentInfo));
+                }
+
+                // Update PaymentRequest
+                $paymentRequest->update(['status' => $statusCode]);
+
+                return response()->json([
+                    'status'  => 'success',
+                    'message' => 'Pay invoice updated'
+                ]);
             });
-
-            return response()->json([
-                'status'  => 'success',
-                'message' => 'Pay invoice updated'
-            ]);
         } catch (\Throwable $e) {
-            Log::channel('payflex_log')->error("Error in processPayInvoice: ", [
+
+            Log::channel('payflex_log')->error("ERROR processing invoice {$invoice}", [
                 'error' => $e->getMessage(),
                 'trace' => $e->getTraceAsString()
             ]);
 
-            // something_wrong_flash('An unexpected error occured!');
-            return response()->json('Internal server error', 500);
+            return response()->json([
+                'status'  => 'error',
+                'message' => 'Internal server error',
+                'error'   => $e->getMessage()
+            ], 500);
         }
     }
+
 
     public function handlePayFlexNotification(Request $request)
     {

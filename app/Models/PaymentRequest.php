@@ -14,6 +14,8 @@ class PaymentRequest extends Model
         'status',
         'spg_transaction_id',
         'gateway_status_code',
+        'creator_id',
+        'created_by',
         'paid_at'
     ];
 
