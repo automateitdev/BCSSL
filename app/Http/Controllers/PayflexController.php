@@ -16,7 +16,7 @@ class PayflexController extends Controller
 {
     public function handlePayFlexVerification(Request $request)
     {
-        Log::alert('HITS HANDLE PAYFLEX:::::::::::', [$request->all()]);
+        Log::channel('payflex_log')->info('Verify request: ', [$request->all()]);
         $data = $request->all();
         // Check if PayFlex has provided data
         if (empty($data['data'])) {
@@ -35,7 +35,7 @@ class PayflexController extends Controller
     private function processPayInvoice(string $invoice, array $verification)
     {
         try {
-            Log::alert('I ENTERED IN THE INVOICE PORCESS HUHAHAHAHAHAH');
+            Log::channel('payflex_log')->info('I ENTERED IN THE INVOICE PORCESS HUHAHAHAHAHAH');
             DB::transaction(function () use ($invoice, $verification) {
 
                 $statusCode = $verification['Status'] ?? null;
