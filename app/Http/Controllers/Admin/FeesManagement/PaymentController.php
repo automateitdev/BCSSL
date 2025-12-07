@@ -504,23 +504,17 @@ class PaymentController extends Controller
 
         if ($paymentStatus != 200) {
             something_wrong_flash('Payment attempt canceled/failed');
-            return redirect()->back();
         } else {
             record_created_flash('Payment has been done successfully!');
-            return redirect()->back();
         }
 
-        // if ($payInvoice) {
-        //     $returnUrl = $payInvoice?->instituteDetail?->vendor?->payment_portal ?? null;
-        //     if ($returnUrl) {
-        //         return redirect()->away(
-        //             $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
-        //         );
-        //     }
-        // }
-
-        // if (!$returnUrl) {
-        //     return response()->json(["Status" => 200, "Message" => "Payment verification reconciliation successful"]);
-        // }
+        if ($payInvoice) {
+            $returnUrl = $payInvoice?->instituteDetail?->vendor?->payment_portal ?? null;
+            if ($returnUrl) {
+                return redirect()->away(
+                    $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
+                );
+            }
+        }
     }
 }
