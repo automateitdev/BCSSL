@@ -541,7 +541,7 @@ class PaymentController extends Controller
         }
 
         if ($payInvoice) {
-            $returnUrl = $payInvoice?->instituteDetail?->vendor?->payment_portal ?? null;
+            $returnUrl = config('app.url');
             if ($returnUrl) {
                 return redirect()->away(
                     $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
