@@ -508,7 +508,7 @@ class PaymentController extends Controller
             record_created_flash('Payment has been done successfully!');
         }
 
-        return view('member.portal');
+        return view('pages.member.dashboard.member-info');
 
         // if ($payInvoice) {
         //     $returnUrl = $payInvoice?->instituteDetail?->vendor?->payment_portal ?? null;
