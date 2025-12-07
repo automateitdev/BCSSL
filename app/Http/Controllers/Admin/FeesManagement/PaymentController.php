@@ -78,14 +78,15 @@ class PaymentController extends Controller
         if (Auth::guard('admin')->check()) {
             $user = User::find(Auth::guard('admin')->user()->id);
             $data['status'] = PaymentInfo::STATUS_PENDING;
-            $data['created_by'] = $user->id;
+            $data['creator_id'] = $user->id;
+            $data['created_by'] = 'admin';
 
             $applicantContact = $user->mobile;
         } else {
             $user = Member::find(Auth::guard('web')->user()->id);
             $data['status'] = PaymentInfo::STATUS_PENDING;
-            $data['created_by'] = $user->id;
-
+            $data['creator_id'] = $user->id;
+            $data['created_by'] = 'member';
             $applicantContact = $user->formatted_number;
         }
 
@@ -132,6 +133,8 @@ class PaymentController extends Controller
                     'invoice'        => $data['invoice_no'],
                     'fee_assign_ids' => $data['fee_assign_id'],
                     'total_amount'   => $data['total_amount'],
+                    'creator_id'     => $data['creator_id'],
+                    'created_by'     => $data['created_by'],
                     'status'         => 'pending',
                 ]);
 
@@ -173,11 +176,11 @@ class PaymentController extends Controller
                     'accounts' => $accounts
                 ];
 
-                Log::channel('pay_flex')->info('disbursements: ', [$disbursements]);
+                Log::channel('payflex_log')->info('disbursements: ', [$disbursements]);
 
                 $initResponse = $this->paymentService->initiateGatewayPayment('SPG', $gatewayDetails, $applicantData, $data['total_amount'], $disbursements, $invoiceData);
 
-                Log::channel('pay_flex')->info('Payment init response: ', ['response' => $initResponse]);
+                Log::channel('payflex_log')->info('Payment init response: ', ['response' => $initResponse]);
 
                 if ($initResponse['status'] == 'success' && !empty($initResponse['payment_url'])) {
                     return redirect()->to($initResponse['payment_url']);
@@ -351,15 +354,15 @@ class PaymentController extends Controller
                 }
 
                 // Fetch Member
-                $user = Member::find($paymentRequest->member_id);
+                $user = Member::find($paymentRequest->creator_id);
 
                 if (!$user) {
-                    throw new \Exception("Member not found (ID: {$paymentRequest->member_id}) for invoice {$invoice}");
+                    throw new \Exception("Member not found (ID: {$paymentRequest->creator_id}) for invoice {$invoice}");
                 }
 
                 // Prepare PaymentInfo data
                 $data = [
-                    'member_id'        => $paymentRequest->member_id,
+                    'member_id'        => $user->creator_id,
                     'payment_status'   => $statusCode,
                     'status_code'      => $statusCode,
                     'transaction_id'   => $verification['TransactionId'] ?? null,
