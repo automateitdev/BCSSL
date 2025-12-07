@@ -430,6 +430,7 @@ class PaymentController extends Controller
     private function processPayInvoice(string $invoice, array $verification)
     {
         try {
+            Log::alert('I ENTERED IN THE INVOICE PORCESS HUHAHAHAHAHAH');
             DB::transaction(function () use ($invoice, $verification) {
 
                 $statusCode = $verification['Status'] ?? null;
