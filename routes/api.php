@@ -25,7 +25,7 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 Route::post('/DataUpdate', [SpgPaymentController::class, 'dataUpdate']);
 
 // payflex essential routes
-Route::post('/pay-flex/verify', [PaymentController::class, 'handlePayFlexVerification'])->name('payFlex.verification')->middleware(['api']);
-Route::post('/pay-flex/notify', [PaymentController::class, 'handlePayFlexNotification'])->name('payFlex.notification')->middleware(['api']);
+Route::post('/pay-flex/verify', [PaymentController::class, 'handlePayFlexVerification']);
+Route::post('/pay-flex/notify', [PaymentController::class, 'handlePayFlexNotification']);
 
 // Route::post('/member-portal-register', [MemberAuthController::class, 'memberRegister']);
