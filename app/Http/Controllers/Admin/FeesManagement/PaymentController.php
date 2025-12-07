@@ -498,27 +498,32 @@ class PaymentController extends Controller
 
     public function postPaymentReconcile(Request $request)
     {
-        $paymentStatus = $request->input('status') ?? null;
-        $invoice = $request->input('invoice') ?? null;
+        $paymentStatus = $request->input('status');
+        $invoice = $request->input('invoice');
         $payInvoice = PaymentRequest::where('invoice', $invoice)->first();
 
-        if ($paymentStatus != 200) {
-            something_wrong_flash('Payment attempt canceled/failed');
-        } else {
-            record_created_flash('Payment has been done successfully!');
-        }
+        // Always define this
+        $returnUrl = config('app.url');
 
+        // If matching invoice exists
         if ($payInvoice) {
-            $returnUrl = config('app.url') ?? null;
-            if ($returnUrl) {
-                return redirect()->away(
-                    $returnUrl . "?status={$paymentStatus}&invoice={$invoice}"
-                );
+
+            if ($paymentStatus != 200) {
+                something_wrong_flash('Payment attempt canceled/failed');
+            } else {
+                record_created_flash('Payment has been done successfully!');
             }
+
+            // Redirect back to your app (same domain)
+            return redirect()->to(
+                "{$returnUrl}?status={$paymentStatus}&invoice={$invoice}"
+            );
         }
 
-        if (!$returnUrl) {
-            return response()->json(["Status" => 200, "Message" => "Payment verification reconciliation successful"]);
-        }
+        // If no invoice found OR returnUrl is null
+        return response()->json([
+            "Status" => 200,
+            "Message" => "Payment verification reconciliation successful"
+        ]);
     }
 }
