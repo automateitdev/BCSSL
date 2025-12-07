@@ -325,7 +325,7 @@ class PaymentController extends Controller
                 'message' => 'Pay invoice updated'
             ]);
         } catch (\Throwable $e) {
-            Log::channel('payment_log')->error("Error in processPayInvoice: " . $e->getMessage(), [
+            Log::channel('payflex_log')->error("Error in processPayInvoice: " . $e->getMessage(), [
                 'trace' => $e->getTraceAsString()
             ]);
 
