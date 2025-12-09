@@ -83,7 +83,7 @@ class PayflexController extends Controller
                     'total_amount'     => $paymentRequest->total_amount,
                     'status'           => ($statusCode == 200)
                         ? PaymentInfo::STATUS_COMPLETE
-                        : PaymentInfo::STATUS_PENDING,
+                        : PaymentInfo::STATUS_FAILED,
                 ];
 
                 // Save PaymentInfo

@@ -613,7 +613,7 @@ class PaymentController extends Controller
 
 
                 //for online payment status all time completed
-                $data['status'] = $result['PaymentStatus'] == 200 ? PaymentInfo::STATUS_COMPLETE : PaymentInfo::STATUS_FAILED;
+                $data['status'] = $result['PaymentStatus'] == 200 ? PaymentInfo::STATUS_COMPLETE : PaymentInfo::STATUS_PENDING;
 
                 $feeAssigns = FeeAssign::find($data['fee_assign_id']);
                 $payment_infos = PaymentInfo::create($data);
