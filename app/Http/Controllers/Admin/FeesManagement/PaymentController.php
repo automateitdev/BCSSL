@@ -1,5 +1,4 @@
-<!-- 222<?php -->
-
+<?php
 namespace App\Http\Controllers\Admin\FeesManagement;
 
 use GuzzleHttp\Client as GuzzleClient;
