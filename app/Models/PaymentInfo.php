@@ -46,6 +46,7 @@ class PaymentInfo extends Model
     public const STATUS_COMPLETE= 'completed';
     public const STATUS_PENDING= 'pending';
     public const STATUS_SUSPEND = 'suspend';
+    public const STATUS_FAILED = 'failed';
 
     //payment type
     public const PAYMENT_TYPE_MANUAL ='manual';

@@ -56,6 +56,8 @@ class PayflexController extends Controller
                     throw new \Exception("Member not found (ID: {$paymentRequest->creator_id}) for invoice {$invoice}");
                 }
 
+
+                // Collect fee assigns
                 $feeAssigns = FeeAssign::whereIn('id', $paymentRequest->fee_assign_ids)->get();
 
                 // Prepare PaymentInfo data
@@ -86,9 +88,6 @@ class PayflexController extends Controller
 
                 // Save PaymentInfo
                 $paymentInfo = PaymentInfo::create($data);
-
-                // Collect fee assigns
-
 
                 // Create PaymentInfoItems
                 foreach ($feeAssigns as $feeAssign) {

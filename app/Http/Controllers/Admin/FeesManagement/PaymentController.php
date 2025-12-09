@@ -1,4 +1,4 @@
-<?php
+<!-- 222<?php -->
 
 namespace App\Http\Controllers\Admin\FeesManagement;
 
@@ -614,7 +614,7 @@ class PaymentController extends Controller
 
 
                 //for online payment status all time completed
-                $data['status'] = $result['PaymentStatus'] == 200 ? PaymentInfo::STATUS_COMPLETE : PaymentInfo::STATUS_PENDING;
+                $data['status'] = $result['PaymentStatus'] == 200 ? PaymentInfo::STATUS_COMPLETE : PaymentInfo::STATUS_FAILED;
 
                 $feeAssigns = FeeAssign::find($data['fee_assign_id']);
                 $payment_infos = PaymentInfo::create($data);

@@ -16,7 +16,7 @@ class PaymentRequest extends Model
         'gateway_status_code',
         'creator_id',
         'created_by',
-        'paid_at'
+        'paid_at',
     ];
 
     protected $casts = [
