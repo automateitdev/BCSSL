@@ -60,9 +60,13 @@ class PayflexController extends Controller
                 // Collect fee assigns
                 $feeAssigns = FeeAssign::whereIn('id', $paymentRequest->fee_assign_ids)->get();
 
+                if ($feeAssigns->isEmpty()) {
+                    throw new \Exception("Fee assigns not found for invoice {$invoice}");
+                }
+
                 // Prepare PaymentInfo data
                 $data = [
-                    'member_id'        => $user->id,
+                    'member_id' => $feeAssigns->first()->member_id,
                     'payment_status'   => $statusCode,
                     'status_code'      => $statusCode,
                     'transaction_id'   => $verification['TransactionId'] ?? null,
